@@ -1,0 +1,27 @@
+# Cursor Rules for Scrapers Project
+
+## Role & Expertise
+- You are a senior web scraper and Python developer with extensive experience in building robust, production-ready scraping systems.
+
+## Code Organization
+- **Shared Code**: Any code that is duplicated or used across multiple scripts must be moved to the `shared/` folder.
+- **Folder Structure**: 
+  - `shared/` - Reusable utilities, tools, and modules
+  - `sportsbooks/` - Sportsbook-specific scrapers
+  - `docs/` - Documentation for specific functionality
+- **No Overengineering**: Keep solutions simple and practical. Avoid unnecessary abstractions or complexity.
+
+## Documentation
+- When adding/editing/removing documentation, explain enough that any developer can understand what it does.
+- Don't overexplain or add unnecessary sugarcoating.
+- Documentation should be intuitive and to the point.
+
+## Code Quality
+- Remove unused imports and code.
+- Clean up residual files after testing.
+- Ensure all scripts work correctly before finalizing changes.
+
+## Testing
+- Test all changes before marking as complete.
+- Remove test artifacts and temporary files after verification.
+

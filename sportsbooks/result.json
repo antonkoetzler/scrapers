@@ -1,0 +1,736 @@
+{
+  "fixtures": [
+    {
+      "fixture_id": "78760058",
+      "home_team_id": "108757",
+      "home_team_name": "Manchester United",
+      "away_team_id": "106785",
+      "away_team_name": "Manchester City",
+      "start_time": "2026-01-17T09:30:00Z",
+      "status": "scheduled"
+    },
+    {
+      "fixture_id": "78759438",
+      "home_team_id": "106835",
+      "home_team_name": "Chelsea",
+      "away_team_id": "106864",
+      "away_team_name": "Brentford",
+      "start_time": "2026-01-17T12:00:00Z",
+      "status": "scheduled"
+    },
+    {
+      "fixture_id": "78760050",
+      "home_team_id": "108840",
+      "home_team_name": "Liverpool",
+      "away_team_id": "108350",
+      "away_team_name": "Burnley",
+      "start_time": "2026-01-17T12:00:00Z",
+      "status": "scheduled"
+    },
+    {
+      "fixture_id": "78760095",
+      "home_team_id": "106364",
+      "home_team_name": "Tottenham",
+      "away_team_id": "106502",
+      "away_team_name": "West Ham United",
+      "start_time": "2026-01-17T12:00:00Z",
+      "status": "scheduled"
+    },
+    {
+      "fixture_id": "78858135",
+      "home_team_id": "106731",
+      "home_team_name": "Leeds United",
+      "away_team_id": "106357",
+      "away_team_name": "Fulham FC",
+      "start_time": "2026-01-17T12:00:00Z",
+      "status": "scheduled"
+    },
+    {
+      "fixture_id": "78858136",
+      "home_team_id": "107366",
+      "home_team_name": "Sunderland",
+      "away_team_id": "107915",
+      "away_team_name": "Crystal Palace",
+      "start_time": "2026-01-17T12:00:00Z",
+      "status": "scheduled"
+    },
+    {
+      "fixture_id": "78760106",
+      "home_team_id": "109058",
+      "home_team_name": "Nottingham Forest",
+      "away_team_id": "106359",
+      "away_team_name": "Arsenal",
+      "start_time": "2026-01-17T14:30:00Z",
+      "status": "scheduled"
+    },
+    {
+      "fixture_id": "78760112",
+      "home_team_id": "106368",
+      "home_team_name": "Wolverhampton",
+      "away_team_id": "107610",
+      "away_team_name": "Newcastle United",
+      "start_time": "2026-01-18T11:00:00Z",
+      "status": "scheduled"
+    },
+    {
+      "fixture_id": "78759263",
+      "home_team_id": "107586",
+      "home_team_name": "Aston Villa",
+      "away_team_id": "106753",
+      "away_team_name": "Everton",
+      "start_time": "2026-01-18T13:30:00Z",
+      "status": "scheduled"
+    },
+    {
+      "fixture_id": "78759431",
+      "home_team_id": "106747",
+      "home_team_name": "Brighton & Hove Albion",
+      "away_team_id": "106709",
+      "away_team_name": "AFC Bournemouth",
+      "start_time": "2026-01-19T17:00:00Z",
+      "status": "scheduled"
+    }
+  ],
+  "odds": [
+    {
+      "fixture_id": "78760058",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "1",
+      "outcome_name": "Home",
+      "odds_value": 3.8
+    },
+    {
+      "fixture_id": "78760058",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "X",
+      "outcome_name": "Draw",
+      "odds_value": 4.1
+    },
+    {
+      "fixture_id": "78760058",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "2",
+      "outcome_name": "Away",
+      "odds_value": 1.85
+    },
+    {
+      "fixture_id": "78760058",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "yes",
+      "outcome_name": "Yes",
+      "odds_value": 1.5
+    },
+    {
+      "fixture_id": "78760058",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "no",
+      "outcome_name": "No",
+      "odds_value": 2.47
+    },
+    {
+      "fixture_id": "78759438",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "1",
+      "outcome_name": "Home",
+      "odds_value": 1.67
+    },
+    {
+      "fixture_id": "78759438",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "X",
+      "outcome_name": "Draw",
+      "odds_value": 3.9
+    },
+    {
+      "fixture_id": "78759438",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "2",
+      "outcome_name": "Away",
+      "odds_value": 5.1
+    },
+    {
+      "fixture_id": "78759438",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "over_2.5",
+      "outcome_name": "Over 2.5",
+      "odds_value": 1.65
+    },
+    {
+      "fixture_id": "78759438",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "under_2.5",
+      "outcome_name": "Under 2.5",
+      "odds_value": 2.25
+    },
+    {
+      "fixture_id": "78759438",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "yes",
+      "outcome_name": "Yes",
+      "odds_value": 1.62
+    },
+    {
+      "fixture_id": "78759438",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "no",
+      "outcome_name": "No",
+      "odds_value": 2.2
+    },
+    {
+      "fixture_id": "78760050",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "1",
+      "outcome_name": "Home",
+      "odds_value": 1.23
+    },
+    {
+      "fixture_id": "78760050",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "X",
+      "outcome_name": "Draw",
+      "odds_value": 6.4
+    },
+    {
+      "fixture_id": "78760050",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "2",
+      "outcome_name": "Away",
+      "odds_value": 13.0
+    },
+    {
+      "fixture_id": "78760050",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "yes",
+      "outcome_name": "Yes",
+      "odds_value": 2.05
+    },
+    {
+      "fixture_id": "78760050",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "no",
+      "outcome_name": "No",
+      "odds_value": 1.72
+    },
+    {
+      "fixture_id": "78760095",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "1",
+      "outcome_name": "Home",
+      "odds_value": 1.72
+    },
+    {
+      "fixture_id": "78760095",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "X",
+      "outcome_name": "Draw",
+      "odds_value": 3.9
+    },
+    {
+      "fixture_id": "78760095",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "2",
+      "outcome_name": "Away",
+      "odds_value": 4.75
+    },
+    {
+      "fixture_id": "78760095",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "over_2.5",
+      "outcome_name": "Over 2.5",
+      "odds_value": 1.72
+    },
+    {
+      "fixture_id": "78760095",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "under_2.5",
+      "outcome_name": "Under 2.5",
+      "odds_value": 2.15
+    },
+    {
+      "fixture_id": "78760095",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "yes",
+      "outcome_name": "Yes",
+      "odds_value": 1.67
+    },
+    {
+      "fixture_id": "78760095",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "no",
+      "outcome_name": "No",
+      "odds_value": 2.1
+    },
+    {
+      "fixture_id": "78858135",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "1",
+      "outcome_name": "Home",
+      "odds_value": 2.25
+    },
+    {
+      "fixture_id": "78858135",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "X",
+      "outcome_name": "Draw",
+      "odds_value": 3.2
+    },
+    {
+      "fixture_id": "78858135",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "2",
+      "outcome_name": "Away",
+      "odds_value": 3.4
+    },
+    {
+      "fixture_id": "78858135",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "over_2.5",
+      "outcome_name": "Over 2.5",
+      "odds_value": 2.12
+    },
+    {
+      "fixture_id": "78858135",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "under_2.5",
+      "outcome_name": "Under 2.5",
+      "odds_value": 1.72
+    },
+    {
+      "fixture_id": "78858135",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "yes",
+      "outcome_name": "Yes",
+      "odds_value": 1.82
+    },
+    {
+      "fixture_id": "78858135",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "no",
+      "outcome_name": "No",
+      "odds_value": 1.93
+    },
+    {
+      "fixture_id": "78858136",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "1",
+      "outcome_name": "Home",
+      "odds_value": 2.77
+    },
+    {
+      "fixture_id": "78858136",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "X",
+      "outcome_name": "Draw",
+      "odds_value": 3.1
+    },
+    {
+      "fixture_id": "78858136",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "2",
+      "outcome_name": "Away",
+      "odds_value": 2.72
+    },
+    {
+      "fixture_id": "78858136",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "over_2.5",
+      "outcome_name": "Over 2.5",
+      "odds_value": 2.18
+    },
+    {
+      "fixture_id": "78858136",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "under_2.5",
+      "outcome_name": "Under 2.5",
+      "odds_value": 1.7
+    },
+    {
+      "fixture_id": "78858136",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "yes",
+      "outcome_name": "Yes",
+      "odds_value": 1.82
+    },
+    {
+      "fixture_id": "78858136",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "no",
+      "outcome_name": "No",
+      "odds_value": 1.93
+    },
+    {
+      "fixture_id": "78760106",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "1",
+      "outcome_name": "Home",
+      "odds_value": 5.5
+    },
+    {
+      "fixture_id": "78760106",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "X",
+      "outcome_name": "Draw",
+      "odds_value": 4.25
+    },
+    {
+      "fixture_id": "78760106",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "2",
+      "outcome_name": "Away",
+      "odds_value": 1.57
+    },
+    {
+      "fixture_id": "78760106",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "over_2.5",
+      "outcome_name": "Over 2.5",
+      "odds_value": 1.83
+    },
+    {
+      "fixture_id": "78760106",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "under_2.5",
+      "outcome_name": "Under 2.5",
+      "odds_value": 1.98
+    },
+    {
+      "fixture_id": "78760106",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "yes",
+      "outcome_name": "Yes",
+      "odds_value": 1.9
+    },
+    {
+      "fixture_id": "78760106",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "no",
+      "outcome_name": "No",
+      "odds_value": 1.85
+    },
+    {
+      "fixture_id": "78760112",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "1",
+      "outcome_name": "Home",
+      "odds_value": 4.45
+    },
+    {
+      "fixture_id": "78760112",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "X",
+      "outcome_name": "Draw",
+      "odds_value": 4.0
+    },
+    {
+      "fixture_id": "78760112",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "2",
+      "outcome_name": "Away",
+      "odds_value": 1.75
+    },
+    {
+      "fixture_id": "78760112",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "over_2.5",
+      "outcome_name": "Over 2.5",
+      "odds_value": 1.67
+    },
+    {
+      "fixture_id": "78760112",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "under_2.5",
+      "outcome_name": "Under 2.5",
+      "odds_value": 2.22
+    },
+    {
+      "fixture_id": "78760112",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "yes",
+      "outcome_name": "Yes",
+      "odds_value": 1.65
+    },
+    {
+      "fixture_id": "78760112",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "no",
+      "outcome_name": "No",
+      "odds_value": 2.15
+    },
+    {
+      "fixture_id": "78759263",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "1",
+      "outcome_name": "Home",
+      "odds_value": 1.65
+    },
+    {
+      "fixture_id": "78759263",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "X",
+      "outcome_name": "Draw",
+      "odds_value": 4.0
+    },
+    {
+      "fixture_id": "78759263",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "2",
+      "outcome_name": "Away",
+      "odds_value": 5.2
+    },
+    {
+      "fixture_id": "78759263",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "over_2.5",
+      "outcome_name": "Over 2.5",
+      "odds_value": 1.9
+    },
+    {
+      "fixture_id": "78759263",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "over_under",
+      "market_name": "Over/Under",
+      "outcome_id": "under_2.5",
+      "outcome_name": "Under 2.5",
+      "odds_value": 1.91
+    },
+    {
+      "fixture_id": "78759263",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "yes",
+      "outcome_name": "Yes",
+      "odds_value": 1.9
+    },
+    {
+      "fixture_id": "78759263",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "no",
+      "outcome_name": "No",
+      "odds_value": 1.85
+    },
+    {
+      "fixture_id": "78759431",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "1",
+      "outcome_name": "Home",
+      "odds_value": 1.87
+    },
+    {
+      "fixture_id": "78759431",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "X",
+      "outcome_name": "Draw",
+      "odds_value": 3.95
+    },
+    {
+      "fixture_id": "78759431",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "1x2",
+      "market_name": "1X2",
+      "outcome_id": "2",
+      "outcome_name": "Away",
+      "odds_value": 3.8
+    },
+    {
+      "fixture_id": "78759431",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "yes",
+      "outcome_name": "Yes",
+      "odds_value": 1.52
+    },
+    {
+      "fixture_id": "78759431",
+      "bookmaker_id": "betano",
+      "bookmaker_name": "Betano",
+      "market_id": "btts",
+      "market_name": "Both Teams To Score",
+      "outcome_id": "no",
+      "outcome_name": "No",
+      "odds_value": 2.42
+    }
+  ]
+}

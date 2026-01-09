@@ -1,0 +1,13 @@
+{
+  "proxies": [
+    {
+      "http": "http://proxy1.example.com:8080",
+      "https": "http://proxy1.example.com:8080"
+    },
+    {
+      "http": "http://proxy2.example.com:8080",
+      "https": "http://proxy2.example.com:8080"
+    }
+  ]
+}
+
