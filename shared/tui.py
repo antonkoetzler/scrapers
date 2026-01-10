@@ -1,8 +1,17 @@
 """Simple Color TUI API for terminal output."""
+import sys
 from colorama import init, Fore, Style
 
 # Initialize colorama for Windows compatibility
 init(autoreset=True)
+
+# Set UTF-8 encoding for Windows console
+if sys.platform == 'win32':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except (AttributeError, ValueError):
+        # Python < 3.7 or reconfigure failed
+        pass
 
 # Terminal User Interface.
 class TUI:

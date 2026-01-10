@@ -100,7 +100,7 @@
       "market_name": "1X2",
       "outcome_id": "1",
       "outcome_name": "Home",
-      "odds_value": 3.8
+      "odds_value": 3.75
     },
     {
       "fixture_id": "78760058",
@@ -110,7 +110,7 @@
       "market_name": "1X2",
       "outcome_id": "X",
       "outcome_name": "Draw",
-      "odds_value": 4.1
+      "odds_value": 4.0
     },
     {
       "fixture_id": "78760058",
@@ -120,7 +120,7 @@
       "market_name": "1X2",
       "outcome_id": "2",
       "outcome_name": "Away",
-      "odds_value": 1.85
+      "odds_value": 1.87
     },
     {
       "fixture_id": "78760058",
@@ -140,7 +140,7 @@
       "market_name": "Both Teams To Score",
       "outcome_id": "no",
       "outcome_name": "No",
-      "odds_value": 2.47
+      "odds_value": 2.5
     },
     {
       "fixture_id": "78759438",
@@ -220,7 +220,7 @@
       "market_name": "1X2",
       "outcome_id": "1",
       "outcome_name": "Home",
-      "odds_value": 1.23
+      "odds_value": 1.24
     },
     {
       "fixture_id": "78760050",
@@ -230,7 +230,7 @@
       "market_name": "1X2",
       "outcome_id": "X",
       "outcome_name": "Draw",
-      "odds_value": 6.4
+      "odds_value": 6.1
     },
     {
       "fixture_id": "78760050",
@@ -250,7 +250,7 @@
       "market_name": "Both Teams To Score",
       "outcome_id": "yes",
       "outcome_name": "Yes",
-      "odds_value": 2.05
+      "odds_value": 2.02
     },
     {
       "fixture_id": "78760050",
@@ -260,7 +260,7 @@
       "market_name": "Both Teams To Score",
       "outcome_id": "no",
       "outcome_name": "No",
-      "odds_value": 1.72
+      "odds_value": 1.75
     },
     {
       "fixture_id": "78760095",
@@ -290,7 +290,7 @@
       "market_name": "1X2",
       "outcome_id": "2",
       "outcome_name": "Away",
-      "odds_value": 4.75
+      "odds_value": 4.7
     },
     {
       "fixture_id": "78760095",
@@ -310,7 +310,7 @@
       "market_name": "Over/Under",
       "outcome_id": "under_2.5",
       "outcome_name": "Under 2.5",
-      "odds_value": 2.15
+      "odds_value": 2.12
     },
     {
       "fixture_id": "78760095",
@@ -340,7 +340,7 @@
       "market_name": "1X2",
       "outcome_id": "1",
       "outcome_name": "Home",
-      "odds_value": 2.25
+      "odds_value": 2.3
     },
     {
       "fixture_id": "78858135",
@@ -350,7 +350,7 @@
       "market_name": "1X2",
       "outcome_id": "X",
       "outcome_name": "Draw",
-      "odds_value": 3.2
+      "odds_value": 3.3
     },
     {
       "fixture_id": "78858135",
@@ -360,7 +360,7 @@
       "market_name": "1X2",
       "outcome_id": "2",
       "outcome_name": "Away",
-      "odds_value": 3.4
+      "odds_value": 3.25
     },
     {
       "fixture_id": "78858135",
@@ -390,7 +390,7 @@
       "market_name": "Both Teams To Score",
       "outcome_id": "yes",
       "outcome_name": "Yes",
-      "odds_value": 1.82
+      "odds_value": 1.83
     },
     {
       "fixture_id": "78858135",
@@ -400,7 +400,7 @@
       "market_name": "Both Teams To Score",
       "outcome_id": "no",
       "outcome_name": "No",
-      "odds_value": 1.93
+      "odds_value": 1.91
     },
     {
       "fixture_id": "78858136",
@@ -410,7 +410,7 @@
       "market_name": "1X2",
       "outcome_id": "1",
       "outcome_name": "Home",
-      "odds_value": 2.77
+      "odds_value": 2.7
     },
     {
       "fixture_id": "78858136",
@@ -430,7 +430,7 @@
       "market_name": "1X2",
       "outcome_id": "2",
       "outcome_name": "Away",
-      "odds_value": 2.72
+      "odds_value": 2.8
     },
     {
       "fixture_id": "78858136",
@@ -440,7 +440,7 @@
       "market_name": "Over/Under",
       "outcome_id": "over_2.5",
       "outcome_name": "Over 2.5",
-      "odds_value": 2.18
+      "odds_value": 2.2
     },
     {
       "fixture_id": "78858136",
@@ -450,7 +450,7 @@
       "market_name": "Over/Under",
       "outcome_id": "under_2.5",
       "outcome_name": "Under 2.5",
-      "odds_value": 1.7
+      "odds_value": 1.67
     },
     {
       "fixture_id": "78858136",
@@ -460,7 +460,7 @@
       "market_name": "Both Teams To Score",
       "outcome_id": "yes",
       "outcome_name": "Yes",
-      "odds_value": 1.82
+      "odds_value": 1.85
     },
     {
       "fixture_id": "78858136",
@@ -470,7 +470,7 @@
       "market_name": "Both Teams To Score",
       "outcome_id": "no",
       "outcome_name": "No",
-      "odds_value": 1.93
+      "odds_value": 1.9
     },
     {
       "fixture_id": "78760106",
@@ -480,7 +480,7 @@
       "market_name": "1X2",
       "outcome_id": "1",
       "outcome_name": "Home",
-      "odds_value": 5.5
+      "odds_value": 5.8
     },
     {
       "fixture_id": "78760106",
@@ -490,7 +490,7 @@
       "market_name": "1X2",
       "outcome_id": "X",
       "outcome_name": "Draw",
-      "odds_value": 4.25
+      "odds_value": 4.2
     },
     {
       "fixture_id": "78760106",
@@ -510,7 +510,7 @@
       "market_name": "Over/Under",
       "outcome_id": "over_2.5",
       "outcome_name": "Over 2.5",
-      "odds_value": 1.83
+      "odds_value": 1.91
     },
     {
       "fixture_id": "78760106",
@@ -520,7 +520,7 @@
       "market_name": "Over/Under",
       "outcome_id": "under_2.5",
       "outcome_name": "Under 2.5",
-      "odds_value": 1.98
+      "odds_value": 1.9
     },
     {
       "fixture_id": "78760106",
@@ -530,7 +530,7 @@
       "market_name": "Both Teams To Score",
       "outcome_id": "yes",
       "outcome_name": "Yes",
-      "odds_value": 1.9
+      "odds_value": 2.0
     },
     {
       "fixture_id": "78760106",
@@ -540,7 +540,7 @@
       "market_name": "Both Teams To Score",
       "outcome_id": "no",
       "outcome_name": "No",
-      "odds_value": 1.85
+      "odds_value": 1.75
     },
     {
       "fixture_id": "78760112",
@@ -550,7 +550,7 @@
       "market_name": "1X2",
       "outcome_id": "1",
       "outcome_name": "Home",
-      "odds_value": 4.45
+      "odds_value": 4.25
     },
     {
       "fixture_id": "78760112",
@@ -560,7 +560,7 @@
       "market_name": "1X2",
       "outcome_id": "X",
       "outcome_name": "Draw",
-      "odds_value": 4.0
+      "odds_value": 3.95
     },
     {
       "fixture_id": "78760112",
@@ -570,7 +570,7 @@
       "market_name": "1X2",
       "outcome_id": "2",
       "outcome_name": "Away",
-      "odds_value": 1.75
+      "odds_value": 1.78
     },
     {
       "fixture_id": "78760112",
@@ -590,7 +590,7 @@
       "market_name": "Over/Under",
       "outcome_id": "under_2.5",
       "outcome_name": "Under 2.5",
-      "odds_value": 2.22
+      "odds_value": 2.2
     },
     {
       "fixture_id": "78760112",
@@ -600,7 +600,7 @@
       "market_name": "Both Teams To Score",
       "outcome_id": "yes",
       "outcome_name": "Yes",
-      "odds_value": 1.65
+      "odds_value": 1.62
     },
     {
       "fixture_id": "78760112",
@@ -610,7 +610,7 @@
       "market_name": "Both Teams To Score",
       "outcome_id": "no",
       "outcome_name": "No",
-      "odds_value": 2.15
+      "odds_value": 2.2
     },
     {
       "fixture_id": "78759263",
@@ -620,7 +620,7 @@
       "market_name": "1X2",
       "outcome_id": "1",
       "outcome_name": "Home",
-      "odds_value": 1.65
+      "odds_value": 1.7
     },
     {
       "fixture_id": "78759263",
@@ -630,7 +630,7 @@
       "market_name": "1X2",
       "outcome_id": "X",
       "outcome_name": "Draw",
-      "odds_value": 4.0
+      "odds_value": 3.85
     },
     {
       "fixture_id": "78759263",
@@ -640,7 +640,7 @@
       "market_name": "1X2",
       "outcome_id": "2",
       "outcome_name": "Away",
-      "odds_value": 5.2
+      "odds_value": 5.0
     },
     {
       "fixture_id": "78759263",
@@ -650,7 +650,7 @@
       "market_name": "Over/Under",
       "outcome_id": "over_2.5",
       "outcome_name": "Over 2.5",
-      "odds_value": 1.9
+      "odds_value": 1.91
     },
     {
       "fixture_id": "78759263",
@@ -660,7 +660,7 @@
       "market_name": "Over/Under",
       "outcome_id": "under_2.5",
       "outcome_name": "Under 2.5",
-      "odds_value": 1.91
+      "odds_value": 1.9
     },
     {
       "fixture_id": "78759263",
@@ -670,7 +670,7 @@
       "market_name": "Both Teams To Score",
       "outcome_id": "yes",
       "outcome_name": "Yes",
-      "odds_value": 1.9
+      "odds_value": 1.85
     },
     {
       "fixture_id": "78759263",
@@ -680,7 +680,7 @@
       "market_name": "Both Teams To Score",
       "outcome_id": "no",
       "outcome_name": "No",
-      "odds_value": 1.85
+      "odds_value": 1.88
     },
     {
       "fixture_id": "78759431",
@@ -700,7 +700,7 @@
       "market_name": "1X2",
       "outcome_id": "X",
       "outcome_name": "Draw",
-      "odds_value": 3.95
+      "odds_value": 4.0
     },
     {
       "fixture_id": "78759431",
@@ -710,7 +710,7 @@
       "market_name": "1X2",
       "outcome_id": "2",
       "outcome_name": "Away",
-      "odds_value": 3.8
+      "odds_value": 3.75
     },
     {
       "fixture_id": "78759431",

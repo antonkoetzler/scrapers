@@ -10,10 +10,10 @@ from shared.tui import TUI
 _proxy_manager: Optional[ProxyManager] = None
 
 
-def init_proxy_manager(config_path=None, no_proxy: bool = False):
+def init_proxy_manager(config_path=None, no_proxy: bool = False, refresh_proxies: bool = True):
     """Initialize global proxy manager."""
     global _proxy_manager
-    _proxy_manager = ProxyManager(config_path, no_proxy)
+    _proxy_manager = ProxyManager(config_path, no_proxy, refresh_proxies)
     return _proxy_manager
 
 

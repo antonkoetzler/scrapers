@@ -7,19 +7,22 @@ from typing import Dict, List, Optional, Tuple
 
 import requests
 
+from shared.proxy_refresh import health_check_proxy, refresh_proxies
 from shared.tui import TUI
 
 
 class ProxyManager:
     """Manages proxy rotation and IP tracking."""
     
-    def __init__(self, config_path: Optional[Path] = None, no_proxy: bool = False):
+    def __init__(self, config_path: Optional[Path] = None, no_proxy: bool = False, 
+                 refresh_proxies_flag: bool = True):
         """
         Initialize proxy manager.
         
         Args:
             config_path: Path to proxy config file
             no_proxy: If True, disable proxy usage
+            refresh_proxies_flag: If True, auto-refresh when < 5 working proxies
         """
         self.config_path = config_path or Path(__file__).parent.parent / "proxy_config.json"
         self.no_proxy = no_proxy
@@ -27,9 +30,21 @@ class ProxyManager:
         self.current_proxy_index = 0
         self.current_ip: Optional[str] = None
         self.current_country: Optional[str] = None
+        self.refresh_proxies_flag = refresh_proxies_flag
         
         if not no_proxy:
             self._load_proxies()
+            # Health check proxies after loading
+            self.precheck_proxies()
+            
+            # Auto-refresh if needed
+            if self.refresh_proxies_flag and len(self.proxies) < 5:
+                TUI.info(f"Only {len(self.proxies)} working proxies, refreshing...")
+                refreshed_count = refresh_proxies(self.config_path)
+                if refreshed_count > 0:
+                    # Reload and re-check
+                    self._load_proxies()
+                    self.precheck_proxies()
     
     def _load_proxies(self):
         """Load proxies from config file or fetch free proxies."""
@@ -103,13 +118,40 @@ class ProxyManager:
         return proxies
     
     def _save_proxies(self):
-        """Save proxies to config file."""
+        """Save current working proxies to config file."""
         try:
             config = {'proxies': self.proxies}
             with open(self.config_path, 'w', encoding='utf-8') as f:
                 json.dump(config, f, indent=2)
         except Exception:
             pass
+    
+    def precheck_proxies(self):
+        """Health check all proxies and remove non-functional ones."""
+        if self.no_proxy or not self.proxies:
+            return
+        
+        initial_count = len(self.proxies)
+        working_proxies = []
+        
+        TUI.info(f"Health check: Testing {initial_count} proxies...")
+        
+        for i, proxy in enumerate(self.proxies, 1):
+            if health_check_proxy(proxy):
+                working_proxies.append(proxy)
+            else:
+                TUI.warning(f"Proxy {i}/{initial_count} failed health check")
+            time.sleep(0.3)  # Rate limiting
+        
+        self.proxies = working_proxies
+        working_count = len(working_proxies)
+        
+        if working_count < initial_count:
+            TUI.info(f"Health check: {working_count}/{initial_count} proxies working")
+            # Save only working proxies
+            self._save_proxies()
+        else:
+            TUI.success(f"Health check: {working_count}/{initial_count} proxies working")
     
     def get_proxy(self) -> Optional[Dict]:
         """Get next proxy in rotation."""
@@ -127,6 +169,8 @@ class ProxyManager:
             TUI.warning(f"Removed failed proxy from rotation ({len(self.proxies)} remaining)")
             if self.current_proxy_index >= len(self.proxies) and self.proxies:
                 self.current_proxy_index = 0
+            # Save updated proxy list
+            self._save_proxies()
     
     def get_ip_info(self, session) -> Tuple[Optional[str], Optional[str]]:
         """

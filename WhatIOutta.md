@@ -27,6 +27,9 @@ This document outlines the essential data you need to scrape for the betting pre
 
 **Required Fields:**
 
+<details>
+<summary>Fixture data structure</summary>
+
 ```python
 {
     'fixture_id': str,           # Unique identifier (e.g., "12345")
@@ -39,6 +42,8 @@ This document outlines the essential data you need to scrape for the betting pre
 }
 ```
 
+</details>
+
 **Why needed:**
 
 - Fixtures are the base data structure
@@ -47,6 +52,9 @@ This document outlines the essential data you need to scrape for the betting pre
 - Status is used to identify completed matches (for training)
 
 **Example snippet:**
+
+<details>
+<summary>get_fixtures() example</summary>
 
 ```python
 def get_fixtures(self, from_date: str, to_date: str) -> List[Dict]:
@@ -65,6 +73,8 @@ def get_fixtures(self, from_date: str, to_date: str) -> List[Dict]:
     ]
 ```
 
+</details>
+
 ---
 
 ### 2. Scores (Match Results)
@@ -78,6 +88,9 @@ def get_fixtures(self, from_date: str, to_date: str) -> List[Dict]:
 
 **Required Fields:**
 
+<details>
+<summary>Score data structure</summary>
+
 ```python
 {
     'fixture_id': str,            # Must match fixture_id from fixtures
@@ -87,6 +100,8 @@ def get_fixtures(self, from_date: str, to_date: str) -> List[Dict]:
 }
 ```
 
+</details>
+
 **Why needed:**
 
 - Scores are used to create training labels (home_win/draw/away_win, over/under, btts)
@@ -94,6 +109,9 @@ def get_fixtures(self, from_date: str, to_date: str) -> List[Dict]:
 - Only needed for completed matches (status = 'finished')
 
 **Example snippet:**
+
+<details>
+<summary>get_scores() example</summary>
 
 ```python
 def get_scores(self, fixture_id: str) -> Dict:
@@ -106,6 +124,8 @@ def get_scores(self, fixture_id: str) -> Dict:
         'status': 'finished'
     }
 ```
+
+</details>
 
 ---
 
@@ -121,6 +141,9 @@ def get_scores(self, fixture_id: str) -> Dict:
 
 **Required Fields:**
 
+<details>
+<summary>Odds data structure</summary>
+
 ```python
 {
     'fixture_id': str,            # Must match fixture_id from fixtures
@@ -134,9 +157,14 @@ def get_scores(self, fixture_id: str) -> Dict:
 }
 ```
 
+</details>
+
 **Market Types:**
 
 **1x2 Market:**
+
+<details>
+<summary>1x2 market example</summary>
 
 ```python
 {
@@ -148,7 +176,12 @@ def get_scores(self, fixture_id: str) -> Dict:
 }
 ```
 
+</details>
+
 **Over/Under Market:**
+
+<details>
+<summary>Over/Under market example</summary>
 
 ```python
 {
@@ -160,7 +193,12 @@ def get_scores(self, fixture_id: str) -> Dict:
 }
 ```
 
+</details>
+
 **Both Teams To Score (BTTS) Market:**
+
+<details>
+<summary>BTTS market example</summary>
 
 ```python
 {
@@ -172,6 +210,8 @@ def get_scores(self, fixture_id: str) -> Dict:
 }
 ```
 
+</details>
+
 **Why needed:**
 
 - Odds are used as features in the model (average odds, odds spread)
@@ -179,6 +219,9 @@ def get_scores(self, fixture_id: str) -> Dict:
 - Multiple bookmakers allow finding the best odds
 
 **Example snippet:**
+
+<details>
+<summary>get_odds() example</summary>
 
 ```python
 def get_odds(self, fixture_id: str) -> List[Dict]:
@@ -209,6 +252,8 @@ def get_odds(self, fixture_id: str) -> List[Dict]:
     ]
 ```
 
+</details>
+
 ---
 
 ## Data Relationships
@@ -227,67 +272,14 @@ Fixture (1) ──→ (N) Odds         (One fixture has many odds from different
 
 ---
 
-## What You DON'T Need to Scrape
-
-These were only needed because of ODDS-API's structure, but aren't used by the system:
-
-- ❌ **Sports list** - Not used (soccer is hardcoded)
-- ❌ **Tournaments list** - Not used in features or training
-- ❌ **Tournament IDs/names** - Not used in features
-- ❌ **Sport IDs** - Not used in features
-- ❌ **Settlements** - Not used (scores are sufficient)
-- ❌ **Participant IDs** - Only team IDs/names are needed
-
----
-
-## Integration Points
-
-Your scraper should implement these methods to match the existing interface:
-
-```python
-class YourCustomScraper:
-    def __init__(self, db: Optional[Database] = None):
-        self.db = db or Database()
-    
-    def collect_fixtures(self, from_date: str, to_date: str, 
-                        incremental: bool = True) -> int:
-        """Collect fixtures and store in database."""
-        # 1. Scrape fixtures using get_fixtures()
-        # 2. Parse into database format
-        # 3. Store using self.db.insert_fixture()
-        pass
-    
-    def collect_odds(self, fixture_id: str, 
-                    bookmakers: Optional[List[str]] = None) -> bool:
-        """Collect odds for a fixture."""
-        # 1. Scrape odds using get_odds()
-        # 2. Parse into database format
-        # 3. Store using self.db.insert_odds()
-        pass
-    
-    def collect_scores(self, fixture_id: str) -> bool:
-        """Collect scores for a completed fixture."""
-        # 1. Scrape scores using get_scores()
-        # 2. Parse into database format
-        # 3. Store using self.db.insert_score()
-        pass
-```
-
-**Database Methods Available:**
-
-```python
-self.db.insert_fixture(fixture_data: Dict)
-self.db.insert_odds(fixture_id: str, odds_list: List[Dict])
-self.db.insert_score(fixture_id: str, score_data: Dict)
-```
-
----
-
 ## Data Format Examples
 
 ### Complete Example: One Match
 
 **Fixture:**
+
+<details>
+<summary>Fixture example</summary>
 
 ```python
 {
@@ -301,7 +293,12 @@ self.db.insert_score(fixture_id: str, score_data: Dict)
 }
 ```
 
+</details>
+
 **Score (if finished):**
+
+<details>
+<summary>Score example</summary>
 
 ```python
 {
@@ -312,7 +309,12 @@ self.db.insert_score(fixture_id: str, score_data: Dict)
 }
 ```
 
+</details>
+
 **Odds (multiple entries per fixture):**
+
+<details>
+<summary>Odds example</summary>
 
 ```python
 [
@@ -392,9 +394,21 @@ self.db.insert_score(fixture_id: str, score_data: Dict)
 ]
 ```
 
+</details>
+
 ---
 
-## 📊 Betano Scraper Progress (`betano.py`)
+## 📊 Scraper Progress
+
+### FBref Scraper (`sports_data/fbref.py`)
+
+- [x] **Scores Collection** ✅
+  - [x] Scrapes match results from FBref HTML tables
+  - [x] Extracts: `home_team_name`, `away_team_name`, `home_score`, `away_score`, `match_date`, `status`, `league`, `season`
+  - [x] Supports multiple leagues and seasons
+  - [x] Outputs raw match data independently (decoupled from Betano)
+
+### Betano Scraper (`sportsbooks/betano.py`)
 
 ### ✅ What's Currently Working
 
@@ -428,11 +442,11 @@ self.db.insert_score(fixture_id: str, score_data: Dict)
 
 ### ❌ What Still Needs to Be Done
 
-- [ ] **Scores Collection** ❌
-  - [ ] Find endpoint that provides match scores/results
-  - [ ] Extract: `fixture_id`, `home_score`, `away_score`, `status`
-  - [ ] Only collect for matches with `status = 'finished'`
-  - [ ] **Note**: Current endpoint doesn't provide scores - need to discover alternative endpoint
+- [x] **Scores Collection** ✅
+  - [x] FBref scraper (`sports_data/fbref.py`) provides match scores/results
+  - [x] Extracts: `home_team_name`, `away_team_name`, `home_score`, `away_score`, `match_date`, `status`
+  - [x] Only collects completed matches (with scores)
+  - [x] Supports multiple leagues (Premier League, Serie A, La Liga, Bundesliga, etc.)
 
 - [ ] **Status Detection** ⚠️
   - [ ] Currently defaults to `'scheduled'` for all fixtures
@@ -479,7 +493,7 @@ self.db.insert_score(fixture_id: str, score_data: Dict)
 **Essential Data:**
 
 - [ ] **Fixtures**: fixture_id, home_team_id, home_team_name, away_team_id, away_team_name, start_time, status
-- [ ] **Scores**: fixture_id, home_score, away_score, status (only for finished matches)
+- [x] **Scores**: home_team_name, away_team_name, home_score, away_score, match_date, status (via FBref scraper)
 - [ ] **Odds**: fixture_id, bookmaker_id, bookmaker_name, market_id, market_name, outcome_id, outcome_name, odds_value
 
 **Markets to Support:**

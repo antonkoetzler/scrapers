@@ -152,10 +152,14 @@ def main():
     
     parser = argparse.ArgumentParser(description='Betano API Scraper')
     parser.add_argument('--no-proxy', action='store_true', help='Disable proxy usage')
+    parser.add_argument('--refresh-proxies', action='store_true', default=True, 
+                       help='Auto-refresh proxies if < 5 working (default: True)')
+    parser.add_argument('--no-refresh-proxies', dest='refresh_proxies', action='store_false',
+                       help='Disable auto-refresh of proxies')
     args = parser.parse_args()
     
     # Initialize proxy manager
-    init_proxy_manager(no_proxy=args.no_proxy)
+    init_proxy_manager(no_proxy=args.no_proxy, refresh_proxies=args.refresh_proxies)
     
     url = "https://www.betano.bet.br/api/sports/FOOT/hot/trending/leagues/1/events"
     # url = "https://www.betano.bet.br/api/sports/FOOT/hot/trending/leagues/1/events?req=s,stnf,c,mb"
