@@ -16,26 +16,32 @@ This repository contains scrapers for various sportsbooks, designed to collect f
 ## Quick Start
 
 1. Set up virtual environment (recommended):
+
 ```bash
 python -m venv venv
-# Windows: venv\Scripts\activate
-# Linux/Mac: source venv/bin/activate
+# Windows
+.\venv\Scripts\activate
+# Linux/Mac
+source venv/bin/activate
 ```
 
 See [docs/setup.md](docs/setup.md) for detailed setup instructions.
 
-2. Install dependencies:
+1. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Configure proxies (optional):
+1. Configure proxies (optional):
+
 ```bash
 cp proxy_config.json.example proxy_config.json
 # Edit proxy_config.json with your proxies
 ```
 
-3. Run a scraper:
+1. Run a scraper:
+
 ```bash
 python sportsbooks/betano.py
 ```
@@ -59,10 +65,9 @@ python sportsbooks/betano.py
 
 ## Free Proxy Sources
 
-- **ProxyScrape**: https://proxyscrape.com/free-proxy-list
-- **GeoNode**: https://geonode.com/free-proxy-list
-- **Free Proxy List**: https://free-proxy-list.net/
-- **Proxy List**: https://www.proxy-list.download/
+- **ProxyScrape**: <https://proxyscrape.com/free-proxy-list>
+- **GeoNode**: <https://geonode.com/free-proxy-list>
+- **Free Proxy List**: <https://free-proxy-list.net/>
+- **Proxy List**: <https://www.proxy-list.download/>
 
 Note: Free proxies are often unreliable. For production use, consider paid proxy services.
-

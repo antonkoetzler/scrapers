@@ -1,18 +1,23 @@
 """Proxy management for web scraping."""
 import json
-import random
 import time
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 import requests
 
-from shared.proxy_refresh import health_check_proxy, refresh_proxies
+from shared.proxy_refresh import (
+    health_check_proxy, refresh_proxies, get_proxy_key, 
+    load_blacklist, add_to_blacklist, FBREF_TEST_URL
+)
 from shared.tui import TUI
 
 
 class ProxyManager:
-    """Manages proxy rotation and IP tracking."""
+    """Manages proxy rotation, blacklist, and rate-limit cooldowns."""
+    
+    # Cooldown duration for rate-limited proxies (in seconds)
+    RATE_LIMIT_COOLDOWN = 600  # 10 minutes
     
     def __init__(self, config_path: Optional[Path] = None, no_proxy: bool = False, 
                  refresh_proxies_flag: bool = True):
@@ -32,7 +37,14 @@ class ProxyManager:
         self.current_country: Optional[str] = None
         self.refresh_proxies_flag = refresh_proxies_flag
         
+        # Rate-limited proxy tracking: {proxy_key: timestamp_when_rate_limited}
+        self.rate_limited_proxies: Dict[str, float] = {}
+        
+        # Blacklist (persistent, loaded from config)
+        self.blacklist: Set[str] = set()
+        
         if not no_proxy:
+            self._load_blacklist()
             self._load_proxies()
             # Health check proxies after loading
             self.precheck_proxies()
@@ -46,6 +58,12 @@ class ProxyManager:
                     self._load_proxies()
                     self.precheck_proxies()
     
+    def _load_blacklist(self):
+        """Load blacklist from config file."""
+        self.blacklist = load_blacklist(self.config_path)
+        if self.blacklist:
+            TUI.info(f"Loaded {len(self.blacklist)} blacklisted proxies")
+    
     def _load_proxies(self):
         """Load proxies from config file or fetch free proxies."""
         # Try to load from config file
@@ -53,74 +71,38 @@ class ProxyManager:
             try:
                 with open(self.config_path, 'r', encoding='utf-8') as f:
                     config = json.load(f)
-                    self.proxies = config.get('proxies', [])
+                    loaded_proxies = config.get('proxies', [])
+                    
+                    # Filter out blacklisted proxies
+                    self.proxies = [
+                        p for p in loaded_proxies 
+                        if get_proxy_key(p) not in self.blacklist
+                    ]
+                    
                     if self.proxies:
                         TUI.info(f"Loaded {len(self.proxies)} proxies from config")
                         return
             except Exception as e:
                 TUI.warning(f"Failed to load proxy config: {e}")
         
-        # Try to fetch free proxies
-        TUI.info("Attempting to fetch free proxies...")
-        fetched_proxies = self._fetch_free_proxies()
-        
-        if fetched_proxies:
-            self.proxies = fetched_proxies
-            TUI.success(f"Fetched {len(self.proxies)} free proxies")
-            # Save to config for future use
-            self._save_proxies()
+        # Try to refresh proxies
+        TUI.info("No proxies in config, fetching fresh proxies...")
+        refreshed = refresh_proxies(self.config_path)
+        if refreshed > 0:
+            self._load_proxies()  # Reload after refresh
         else:
             TUI.warning("No proxies available, using direct connection")
-    
-    def _fetch_free_proxies(self) -> List[Dict]:
-        """Fetch free proxies from public APIs."""
-        proxies = []
-        
-        # Try proxyscrape.com
-        try:
-            response = requests.get(
-                'https://api.proxyscrape.com/v2/?request=get&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all',
-                timeout=10
-            )
-            if response.status_code == 200:
-                lines = response.text.strip().split('\n')
-                for line in lines[:20]:  # Limit to 20 proxies
-                    line = line.strip()
-                    if ':' in line:
-                        host, port = line.split(':')
-                        proxies.append({
-                            'http': f'http://{host}:{port}',
-                            'https': f'http://{host}:{port}'
-                        })
-        except Exception:
-            pass
-        
-        # Try geonode.com (alternative)
-        if not proxies:
-            try:
-                response = requests.get(
-                    'https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt',
-                    timeout=10
-                )
-                if response.status_code == 200:
-                    lines = response.text.strip().split('\n')
-                    for line in lines[:20]:
-                        line = line.strip()
-                        if ':' in line:
-                            host, port = line.split(':')
-                            proxies.append({
-                                'http': f'http://{host}:{port}',
-                                'https': f'http://{host}:{port}'
-                            })
-            except Exception:
-                pass
-        
-        return proxies
     
     def _save_proxies(self):
         """Save current working proxies to config file."""
         try:
-            config = {'proxies': self.proxies}
+            config = {}
+            if self.config_path.exists():
+                with open(self.config_path, 'r', encoding='utf-8') as f:
+                    config = json.load(f)
+            
+            config['proxies'] = self.proxies
+            
             with open(self.config_path, 'w', encoding='utf-8') as f:
                 json.dump(config, f, indent=2)
         except Exception:
@@ -134,10 +116,15 @@ class ProxyManager:
         initial_count = len(self.proxies)
         working_proxies = []
         
-        TUI.info(f"Health check: Testing {initial_count} proxies...")
+        TUI.info(f"Health check: Testing {initial_count} proxies against FBref...")
         
         for i, proxy in enumerate(self.proxies, 1):
-            if health_check_proxy(proxy):
+            # Skip blacklisted
+            if get_proxy_key(proxy) in self.blacklist:
+                TUI.warning(f"Proxy {i} is blacklisted, skipping")
+                continue
+            
+            if health_check_proxy(proxy, target_url=FBREF_TEST_URL):
                 working_proxies.append(proxy)
             else:
                 TUI.warning(f"Proxy {i}/{initial_count} failed health check")
@@ -153,17 +140,78 @@ class ProxyManager:
         else:
             TUI.success(f"Health check: {working_count}/{initial_count} proxies working")
     
-    def get_proxy(self) -> Optional[Dict]:
-        """Get next proxy in rotation."""
+    def get_proxy(self, skip_rate_limited: bool = True) -> Optional[Dict]:
+        """
+        Get next proxy in rotation.
+        
+        Args:
+            skip_rate_limited: If True, skip proxies that are in rate-limit cooldown
+        
+        Returns:
+            Proxy dict or None if no proxies available
+        """
         if self.no_proxy or not self.proxies:
             return None
         
-        proxy = self.proxies[self.current_proxy_index]
-        self.current_proxy_index = (self.current_proxy_index + 1) % len(self.proxies)
-        return proxy
+        # Clean up expired rate-limit cooldowns
+        self._cleanup_rate_limited()
+        
+        # Find next available proxy
+        attempts = 0
+        while attempts < len(self.proxies):
+            proxy = self.proxies[self.current_proxy_index]
+            self.current_proxy_index = (self.current_proxy_index + 1) % len(self.proxies)
+            
+            if skip_rate_limited and self.is_proxy_rate_limited(proxy):
+                attempts += 1
+                continue
+            
+            return proxy
+        
+        # All proxies are rate-limited
+        TUI.warning("All proxies are rate-limited")
+        return None
     
-    def mark_proxy_failed(self, proxy: Dict):
-        """Mark a proxy as failed and remove it from rotation."""
+    def _cleanup_rate_limited(self):
+        """Remove expired rate-limit cooldowns."""
+        now = time.time()
+        expired = [
+            key for key, timestamp in self.rate_limited_proxies.items()
+            if now - timestamp > self.RATE_LIMIT_COOLDOWN
+        ]
+        for key in expired:
+            del self.rate_limited_proxies[key]
+            TUI.info(f"Proxy cooldown expired: {key[:20]}...")
+    
+    def is_proxy_rate_limited(self, proxy: Dict) -> bool:
+        """Check if a proxy is currently in rate-limit cooldown."""
+        key = get_proxy_key(proxy)
+        if key not in self.rate_limited_proxies:
+            return False
+        
+        # Check if cooldown expired
+        elapsed = time.time() - self.rate_limited_proxies[key]
+        if elapsed > self.RATE_LIMIT_COOLDOWN:
+            del self.rate_limited_proxies[key]
+            return False
+        
+        return True
+    
+    def mark_proxy_rate_limited(self, proxy: Dict):
+        """Mark a proxy as rate-limited (429). Goes into temporary cooldown."""
+        key = get_proxy_key(proxy)
+        self.rate_limited_proxies[key] = time.time()
+        remaining = self.get_available_proxy_count()
+        TUI.warning(f"Proxy rate-limited (429), cooldown {self.RATE_LIMIT_COOLDOWN}s ({remaining} proxies available)")
+    
+    def mark_proxy_failed(self, proxy: Dict, add_to_blacklist_flag: bool = True):
+        """
+        Mark a proxy as permanently failed.
+        
+        Args:
+            proxy: Proxy dict
+            add_to_blacklist_flag: If True, add to persistent blacklist
+        """
         if proxy in self.proxies:
             self.proxies.remove(proxy)
             TUI.warning(f"Removed failed proxy from rotation ({len(self.proxies)} remaining)")
@@ -171,6 +219,25 @@ class ProxyManager:
                 self.current_proxy_index = 0
             # Save updated proxy list
             self._save_proxies()
+        
+        # Add to blacklist
+        if add_to_blacklist_flag:
+            key = get_proxy_key(proxy)
+            self.blacklist.add(key)
+            add_to_blacklist(self.config_path, proxy)
+            TUI.info(f"Added proxy to blacklist")
+    
+    def get_available_proxy_count(self) -> int:
+        """Get count of proxies not in rate-limit cooldown."""
+        self._cleanup_rate_limited()
+        return sum(
+            1 for p in self.proxies 
+            if not self.is_proxy_rate_limited(p)
+        )
+    
+    def has_available_proxies(self) -> bool:
+        """Check if there are any proxies available (not rate-limited)."""
+        return self.get_available_proxy_count() > 0
     
     def get_ip_info(self, session) -> Tuple[Optional[str], Optional[str]]:
         """
@@ -216,9 +283,8 @@ class ProxyManager:
             
             if ip:
                 if country:
-                    TUI.info(f"IP changed: {ip} ({country})")
+                    TUI.info(f"IP: {ip} ({country})")
                 else:
-                    TUI.info(f"IP changed: {ip}")
+                    TUI.info(f"IP: {ip}")
             else:
                 TUI.warning("Could not determine IP address")
-

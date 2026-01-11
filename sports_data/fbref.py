@@ -12,8 +12,8 @@ from bs4 import BeautifulSoup
 # Add parent directory to path for shared imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from shared.tui import TUI
-from shared.scraper_utils import init_proxy_manager
-from shared.request_with_fallback import request_with_fallback
+from shared.scraper_utils import init_proxy_manager, get_proxy_manager
+from shared.request_with_fallback import request_with_fallback, get_request_delay, RateLimitError
 
 
 # FBref league IDs and names
@@ -200,9 +200,10 @@ def extract_matches_from_table(soup: BeautifulSoup, league_name: str, season: st
                 'away_team_name': away_team,
                 'home_score': home_score,
                 'away_score': away_score,
-                'match_date': match_date.strftime('%Y-%m-%d'),
-                'match_datetime': match_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                'start_time': match_date.strftime('%Y-%m-%dT%H:%M:%SZ'),  # Standardized name
                 'status': 'finished',
+                # Optional metadata (not required for core training)
+                'match_date': match_date.strftime('%Y-%m-%d'),
                 'league': league_name,
                 'season': season
             }
@@ -214,8 +215,13 @@ def extract_matches_from_table(soup: BeautifulSoup, league_name: str, season: st
     return matches
 
 
-def scrape_league(league_name: str, league_id: int, season: str, url_name: str = None) -> List[Dict]:
-    """Scrape matches for a specific league."""
+def scrape_league(league_name: str, league_id: int, season: str, url_name: str = None) -> Tuple[List[Dict], bool]:
+    """
+    Scrape matches for a specific league.
+    
+    Returns:
+        Tuple of (matches, rate_limited) where rate_limited indicates if we hit 429
+    """
     if url_name is None:
         url_name = league_name.replace(' ', '-')
     url = f"https://fbref.com/en/comps/{league_id}/{season}/schedule/{season}-{url_name}-Scores-and-Fixtures"
@@ -226,19 +232,20 @@ def scrape_league(league_name: str, league_id: int, season: str, url_name: str =
         response = request_with_fallback('get', url, max_retries=3, use_proxy=True, timeout=15)
         if response.status_code != 200:
             TUI.error(f"Failed to fetch {league_name}: Status {response.status_code}")
-            return []
+            return [], False
         
         soup = BeautifulSoup(response.text, 'html.parser')
         matches = extract_matches_from_table(soup, league_name, season)
         
         TUI.success(f"Found {len(matches)} completed matches in {league_name}")
-        return matches
+        return matches, False
         
+    except RateLimitError as e:
+        TUI.error(f"Rate limited scraping {league_name}: {e}")
+        return [], True
     except Exception as e:
         TUI.error(f"Error scraping {league_name}: {e}")
-        return []
-
-
+        return [], False
 
 
 def main():
@@ -258,6 +265,7 @@ def main():
     
     # Initialize proxy manager
     init_proxy_manager(no_proxy=args.no_proxy, refresh_proxies=args.refresh_proxies)
+    proxy_manager = get_proxy_manager()
     
     TUI.header("FBref Scores Scraper")
     
@@ -270,17 +278,37 @@ def main():
     
     # Scrape all leagues
     all_matches = []
-    for league_name in leagues_to_scrape:
+    rate_limited_count = 0
+    
+    for i, league_name in enumerate(leagues_to_scrape):
         if league_name not in FBREF_LEAGUES:
             TUI.warning(f"Unknown league: {league_name}, skipping")
             continue
         
         league_info = FBREF_LEAGUES[league_name]
-        matches = scrape_league(league_info['name'], league_info['id'], season, league_info.get('name'))
+        matches, was_rate_limited = scrape_league(
+            league_info['name'], 
+            league_info['id'], 
+            season, 
+            league_info.get('name')
+        )
         all_matches.extend(matches)
         
-        # Rate limiting
-        time.sleep(1)
+        if was_rate_limited:
+            rate_limited_count += 1
+            # If we hit rate limit 3 times in a row with direct connection, pause longer
+            if rate_limited_count >= 3:
+                TUI.warning("Multiple rate limits hit. Pausing for 60 seconds...")
+                time.sleep(60)
+                rate_limited_count = 0
+        else:
+            rate_limited_count = 0  # Reset on success
+        
+        # Adaptive delay between leagues
+        if i < len(leagues_to_scrape) - 1:  # Don't delay after last league
+            delay = get_request_delay(proxy_manager)
+            TUI.info(f"Waiting {delay:.1f}s before next league...")
+            time.sleep(delay)
     
     TUI.success(f"\nTotal matches scraped: {len(all_matches)}")
     
@@ -300,4 +328,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
