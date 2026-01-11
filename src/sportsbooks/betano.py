@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
 
-# Add parent directory to path for shared imports
+# Add src directory to path for shared imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from shared.tui import TUI
 from shared.scraper_utils import get_session, init_proxy_manager
@@ -175,9 +175,8 @@ def main():
         events = data.get("data", {}).get("events", [])
         transformed_data = transform_data(events)
         
-        result_path = Path(__file__).parent / "result.json"
-        with open(result_path, 'w', encoding='utf-8') as f:
-            json.dump(transformed_data, f, indent=2, ensure_ascii=False)
+        # Output JSON to stdout
+        print(json.dumps(transformed_data, indent=2, ensure_ascii=False))
         
     except Exception as e:
         TUI.error(f"Error: {e}")

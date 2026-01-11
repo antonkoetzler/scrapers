@@ -270,7 +270,7 @@ def refresh_proxies(config_path: Path = None, min_working: int = 5) -> int:
         Number of working proxies saved
     """
     if config_path is None:
-        config_path = Path(__file__).parent.parent / "proxy_config.json"
+        config_path = Path(__file__).parent.parent.parent / "proxy_config.json"
     
     TUI.info("Fetching fresh proxies from public sources...")
     

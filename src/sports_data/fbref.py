@@ -9,7 +9,7 @@ from typing import Dict, List, Optional, Tuple
 
 from bs4 import BeautifulSoup
 
-# Add parent directory to path for shared imports
+# Add src directory to path for shared imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from shared.tui import TUI
 from shared.scraper_utils import init_proxy_manager, get_proxy_manager
@@ -229,7 +229,8 @@ def scrape_league(league_name: str, league_id: int, season: str, url_name: str =
     TUI.info(f"Scraping {league_name} ({season})...")
     
     try:
-        response = request_with_fallback('get', url, max_retries=3, use_proxy=True, timeout=15)
+        # FBref: proxies are disabled by default since free proxies don't work
+        response = request_with_fallback('get', url, max_retries=3, use_proxy=False, timeout=15)
         if response.status_code != 200:
             TUI.error(f"Failed to fetch {league_name}: Status {response.status_code}")
             return [], False
@@ -253,9 +254,12 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description='FBref Scores Scraper')
-    parser.add_argument('--no-proxy', action='store_true', help='Disable proxy usage')
-    parser.add_argument('--refresh-proxies', action='store_true', default=True, 
-                       help='Auto-refresh proxies if < 5 working (default: True)')
+    parser.add_argument('--no-proxy', action='store_true', default=True,
+                       help='Disable proxy usage (default: True, proxies disabled for FBref)')
+    parser.add_argument('--use-proxy', dest='no_proxy', action='store_false',
+                       help='Enable proxy usage (not recommended for FBref)')
+    parser.add_argument('--refresh-proxies', action='store_true', default=False, 
+                       help='Auto-refresh proxies if < 5 working (default: False)')
     parser.add_argument('--no-refresh-proxies', dest='refresh_proxies', action='store_false',
                        help='Disable auto-refresh of proxies')
     parser.add_argument('--season', help='Season to scrape (e.g., 2024-2025). Default: current season')
@@ -312,18 +316,14 @@ def main():
     
     TUI.success(f"\nTotal matches scraped: {len(all_matches)}")
     
-    # Save results - output raw match data
-    result_path = Path(__file__).parent / "fbref_scores.json"
+    # Output JSON to stdout
     output = {
         'matches': all_matches,
         'total_matches': len(all_matches),
         'season': season
     }
     
-    with open(result_path, 'w', encoding='utf-8') as f:
-        json.dump(output, f, indent=2, ensure_ascii=False)
-    
-    TUI.success(f"Results saved to: {result_path}")
+    print(json.dumps(output, indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":

@@ -29,7 +29,7 @@ class ProxyManager:
             no_proxy: If True, disable proxy usage
             refresh_proxies_flag: If True, auto-refresh when < 5 working proxies
         """
-        self.config_path = config_path or Path(__file__).parent.parent / "proxy_config.json"
+        self.config_path = config_path or Path(__file__).parent.parent.parent / "proxy_config.json"
         self.no_proxy = no_proxy
         self.proxies: List[Dict] = []
         self.current_proxy_index = 0
