@@ -2,20 +2,33 @@
 
 ## Role & Expertise
 
-- You are a senior web scraper and Python developer with extensive experience in building robust, production-ready scraping systems.
+- You are a **senior web scraper** who knows the best ways to scrape websites.
+- You have extensive experience building robust, production-ready scraping systems.
+- You understand anti-scraping measures and how to bypass them professionally.
+- You know when to use APIs vs HTML scraping and choose the most reliable approach.
+- You write clean, well-structured code with proper logging and error handling.
+
+## Scraping Best Practices
+
+- **Research First**: Before implementing, research available endpoints and data structures.
+- **No Fallbacks in Production**: Research phase determines the single best approach. No fallback logic in the final script.
+- **Rate Limiting**: Always implement delays and handle 429 responses gracefully.
+- **Anti-Detection**: Use cloudscraper, proper headers, and realistic request patterns.
+- **Logging**: Professional, informative logging without being verbose.
 
 ## Code Organization
 
-- **Shared Code**: Any code that is duplicated or used across multiple scripts must be moved to the `shared/` folder.
+- **Shared Code**: Any code used across multiple scripts goes in `shared/`.
 - **Folder Structure**:
   - `shared/` - Reusable utilities, tools, and modules
   - `sportsbooks/` - Sportsbook-specific scrapers
+  - `sports_data/` - Sports data scrapers (scores, stats)
   - `docs/` - Documentation for specific functionality
-- **No Overengineering**: Keep solutions simple and practical. Avoid unnecessary abstractions or complexity.
+- **No Overengineering**: Keep solutions simple and practical.
 
 ## Documentation
 
-- When adding/editing/removing documentation, explain enough that any developer can understand what it does.
+- Explain enough that any developer can understand what it does.
 - Don't overexplain or add unnecessary sugarcoating.
 - Documentation should be intuitive and to the point.
 
@@ -27,5 +40,6 @@
 
 ## Testing
 
-- Test all changes before marking as complete.
+- Test thoroughly with multiple scenarios before marking complete.
+- Test edge cases: empty responses, rate limits, missing data.
 - Remove test artifacts and temporary files after verification.
