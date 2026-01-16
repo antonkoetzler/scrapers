@@ -19,42 +19,42 @@ class TUI:
     
     @staticmethod
     def success(message: str) -> None:
-        """Print success message in green."""
-        print(f"{Fore.GREEN}✓ {message}{Style.RESET_ALL}")
+        """Print success message in green to stderr."""
+        print(f"{Fore.GREEN}✓ {message}{Style.RESET_ALL}", file=sys.stderr)
     
     @staticmethod
     def error(message: str) -> None:
-        """Print error message in red."""
-        print(f"{Fore.RED}✗ {message}{Style.RESET_ALL}")
+        """Print error message in red to stderr."""
+        print(f"{Fore.RED}✗ {message}{Style.RESET_ALL}", file=sys.stderr)
     
     @staticmethod
     def warning(message: str) -> None:
-        """Print warning message in yellow."""
-        print(f"{Fore.YELLOW}⚠ {message}{Style.RESET_ALL}")
+        """Print warning message in yellow to stderr."""
+        print(f"{Fore.YELLOW}⚠ {message}{Style.RESET_ALL}", file=sys.stderr)
     
     @staticmethod
     def info(message: str) -> None:
-        """Print info message in cyan."""
-        print(f"{Fore.CYAN}ℹ {message}{Style.RESET_ALL}")
+        """Print info message in cyan to stderr."""
+        print(f"{Fore.CYAN}ℹ {message}{Style.RESET_ALL}", file=sys.stderr)
     
     @staticmethod
     def header(message: str) -> None:
-        """Print header message in bold."""
-        print(f"{Style.BRIGHT}{message}{Style.RESET_ALL}")
+        """Print header message in bold to stderr."""
+        print(f"{Style.BRIGHT}{message}{Style.RESET_ALL}", file=sys.stderr)
     
     @staticmethod
     def print(message: str, color: str = None) -> None:
-        """Print message with optional color."""
+        """Print message with optional color to stderr."""
         if color == "green":
-            print(f"{Fore.GREEN}{message}{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}{message}{Style.RESET_ALL}", file=sys.stderr)
         elif color == "red":
-            print(f"{Fore.RED}{message}{Style.RESET_ALL}")
+            print(f"{Fore.RED}{message}{Style.RESET_ALL}", file=sys.stderr)
         elif color == "yellow":
-            print(f"{Fore.YELLOW}{message}{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}{message}{Style.RESET_ALL}", file=sys.stderr)
         elif color == "cyan":
-            print(f"{Fore.CYAN}{message}{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}{message}{Style.RESET_ALL}", file=sys.stderr)
         elif color == "blue":
-            print(f"{Fore.BLUE}{message}{Style.RESET_ALL}")
+            print(f"{Fore.BLUE}{message}{Style.RESET_ALL}", file=sys.stderr)
         else:
-            print(message)
+            print(message, file=sys.stderr)
 
