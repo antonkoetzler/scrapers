@@ -231,6 +231,10 @@ def scrape_league(league_name: str, league_id: int, season: str, url_name: str =
     try:
         # FBref: proxies are disabled by default since free proxies don't work
         response = request_with_fallback('get', url, max_retries=3, use_proxy=False, timeout=15)
+        if response.status_code == 403:
+            # 403 Forbidden - likely IP blocked or page doesn't exist for this season
+            TUI.warning(f"Access denied (403) for {league_name} - skipping")
+            return [], False
         if response.status_code != 200:
             TUI.error(f"Failed to fetch {league_name}: Status {response.status_code}")
             return [], False
@@ -245,6 +249,11 @@ def scrape_league(league_name: str, league_id: int, season: str, url_name: str =
         TUI.error(f"Rate limited scraping {league_name}: {e}")
         return [], True
     except Exception as e:
+        error_str = str(e)
+        # Handle 403 Forbidden errors that come through raise_for_status()
+        if '403' in error_str or 'Forbidden' in error_str:
+            TUI.warning(f"Access denied (403) for {league_name} - skipping")
+            return [], False
         TUI.error(f"Error scraping {league_name}: {e}")
         return [], False
 
