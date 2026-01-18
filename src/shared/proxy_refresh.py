@@ -1,5 +1,4 @@
 """Shared proxy refresh functionality."""
-import json
 import time
 from pathlib import Path
 from typing import Dict, List, Set, Optional
@@ -9,8 +8,8 @@ import requests
 from shared.tui import TUI
 
 
-# Target URL for testing proxies (FBref homepage - lightweight)
-FBREF_TEST_URL = "https://fbref.com/en/"
+# Target URL for testing proxies (use httpbin for basic connectivity)
+HTTPBIN_TEST_URL = "http://httpbin.org/ip"  # Simple connectivity test
 
 
 def get_proxy_key(proxy: Dict) -> str:
@@ -24,284 +23,120 @@ def get_proxy_key(proxy: Dict) -> str:
     return url
 
 
-def _fetch_from_proxyscrape() -> List[str]:
-    """Fetch proxies from proxyscrape.com API (v3)."""
-    try:
-        response = requests.get(
-            'https://api.proxyscrape.com/v3/free-proxy-list/get?request=displayproxies&protocol=http&timeout=10000&proxy_format=ipport&format=text',
-            timeout=10
-        )
-        if response.status_code == 200:
-            lines = response.text.strip().split('\n')
-            # Format is ip:port, filter valid ones
-            proxies = []
-            for line in lines:
-                line = line.strip()
-                if ':' in line and not line.startswith('http'):
-                    proxies.append(line)
-                elif line.startswith('http://'):
-                    # Extract ip:port from http://ip:port
-                    proxies.append(line[7:])
-            return proxies[:30]
-    except Exception:
-        pass
-    return []
-
-
-def _fetch_from_geonode() -> List[str]:
-    """Fetch proxies from geonode.com API."""
-    try:
-        response = requests.get(
-            'https://proxylist.geonode.com/api/proxy-list?limit=30&page=1&sort_by=lastChecked&sort_type=desc&protocols=http',
-            timeout=10
-        )
-        if response.status_code == 200:
-            data = response.json()
-            proxies = []
-            for item in data.get('data', []):
-                ip = item.get('ip')
-                port = item.get('port')
-                if ip and port:
-                    proxies.append(f"{ip}:{port}")
-            return proxies[:30]
-    except Exception:
-        pass
-    return []
-
-
-def _fetch_from_free_proxy_list() -> List[str]:
-    """Fetch proxies from free-proxy-list.net (via sslproxies)."""
-    try:
-        response = requests.get(
-            'https://www.sslproxies.org/',
-            timeout=10,
-            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
-        )
-        if response.status_code == 200:
-            # Parse HTML table
-            from bs4 import BeautifulSoup
-            soup = BeautifulSoup(response.text, 'html.parser')
-            table = soup.find('table', class_='table')
-            if table:
-                proxies = []
-                rows = table.find_all('tr')[1:]  # Skip header
-                for row in rows[:30]:
-                    cells = row.find_all('td')
-                    if len(cells) >= 2:
-                        ip = cells[0].get_text(strip=True)
-                        port = cells[1].get_text(strip=True)
-                        if ip and port:
-                            proxies.append(f"{ip}:{port}")
-                return proxies
-    except Exception:
-        pass
-    return []
-
-
-def _fetch_from_thespeedx() -> List[str]:
-    """Fetch proxies from TheSpeedX GitHub list (fallback)."""
-    try:
-        response = requests.get(
-            'https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt',
-            timeout=10
-        )
-        if response.status_code == 200:
-            lines = response.text.strip().split('\n')
-            return [line.strip() for line in lines if ':' in line.strip()][:30]
-    except Exception:
-        pass
-    return []
-
-
-def fetch_free_proxies(blacklist: Set[str] = None, min_needed: int = 5) -> List[Dict]:
-    """
-    Fetch free proxies from multiple providers sequentially.
-    Stops when enough working proxies are found.
+def proxy_str_to_dict(proxy_str: str) -> Optional[Dict]:
+    """Convert proxy string (ip:port) to proxy dict."""
+    parts = proxy_str.strip().split(':')
+    if len(parts) != 2:
+        return None
     
-    Args:
-        blacklist: Set of proxy keys to skip
-        min_needed: Stop fetching when this many proxies are found
+    host, port = parts[0].strip(), parts[1].strip()
+    if not host or not port:
+        return None
     
-    Returns:
-        List of proxy dicts
-    """
-    blacklist = blacklist or set()
-    proxies = []
-    
-    # Provider priority order
-    providers = [
-        ("proxyscrape.com", _fetch_from_proxyscrape),
-        ("geonode.com", _fetch_from_geonode),
-        ("sslproxies.org", _fetch_from_free_proxy_list),
-        ("TheSpeedX GitHub", _fetch_from_thespeedx),
-    ]
-    
-    for provider_name, fetch_func in providers:
-        TUI.info(f"Fetching from {provider_name}...")
-        try:
-            raw_proxies = fetch_func()
-            
-            if not raw_proxies:
-                TUI.warning(f"No proxies from {provider_name}")
-                continue
-            
-            TUI.info(f"Got {len(raw_proxies)} proxies from {provider_name}")
-            
-            # Filter out blacklisted and convert to dict format
-            for proxy_str in raw_proxies:
-                if proxy_str in blacklist:
-                    continue
-                    
-                parts = proxy_str.split(':')
-                if len(parts) != 2:
-                    continue
-                    
-                host, port = parts
-                proxy_dict = {
-                    'http': f'http://{host}:{port}',
-                    'https': f'http://{host}:{port}'
-                }
-                proxies.append(proxy_dict)
-            
-            # Health check proxies from this provider
-            working = []
-            for i, proxy in enumerate(proxies, 1):
-                TUI.info(f"Testing proxy {i}/{len(proxies)} from {provider_name}...")
-                if health_check_proxy(proxy, target_url=FBREF_TEST_URL):
-                    working.append(proxy)
-                    TUI.success(f"Proxy {i} working")
-                    if len(working) >= min_needed:
-                        TUI.success(f"Found {len(working)} working proxies, stopping")
-                        return working
-                else:
-                    TUI.warning(f"Proxy {i} failed")
-                time.sleep(0.5)
-            
-            if working:
-                proxies = working
-                TUI.info(f"Found {len(working)} working proxies from {provider_name}")
-                if len(working) >= min_needed:
-                    return working
-            else:
-                proxies = []  # Reset for next provider
-                
-        except Exception as e:
-            TUI.warning(f"Error fetching from {provider_name}: {e}")
-            continue
-    
-    return proxies
+    return {
+        'http': f'http://{host}:{port}',
+        'https': f'http://{host}:{port}'
+    }
 
 
 def health_check_proxy(proxy: Dict, timeout: int = 10, target_url: str = None) -> bool:
     """
     Test if a proxy is working by accessing the target URL.
     
+    First tests basic connectivity with httpbin, then tests target URL if provided.
+    
     Args:
         proxy: Proxy dict with 'http' and 'https' keys
         timeout: Request timeout in seconds
-        target_url: URL to test against (default: FBref homepage)
+        target_url: URL to test against (default: httpbin for basic connectivity)
         
     Returns:
         True if proxy is working, False otherwise
     """
-    test_url = target_url or FBREF_TEST_URL
-    
+    # First test basic connectivity with httpbin
     try:
         response = requests.get(
-            test_url,
+            HTTPBIN_TEST_URL,
             proxies=proxy,
             timeout=timeout,
             headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
         )
-        # Check for successful response (not just 200, could be 403 if blocked)
-        return response.status_code == 200
+        if response.status_code != 200:
+            return False  # Proxy doesn't work at all
     except Exception:
-        return False
-
-
-def load_blacklist(config_path: Path) -> Set[str]:
-    """Load blacklisted proxy keys from config file."""
-    if config_path.exists():
-        try:
-            with open(config_path, 'r', encoding='utf-8') as f:
-                config = json.load(f)
-                return set(config.get('blacklist', []))
-        except Exception:
-            pass
-    return set()
-
-
-def save_blacklist(config_path: Path, blacklist: Set[str]):
-    """Save blacklist to config file (preserves other config data)."""
-    config = {}
-    if config_path.exists():
-        try:
-            with open(config_path, 'r', encoding='utf-8') as f:
-                config = json.load(f)
-        except Exception:
-            pass
+        return False  # Proxy is dead/broken
     
-    config['blacklist'] = list(blacklist)
+    # If target_url provided, test that too
+    if target_url:
+        try:
+            response = requests.get(
+                target_url,
+                proxies=proxy,
+                timeout=timeout,
+                headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+            )
+            return response.status_code == 200
+        except Exception:
+            return False
+    
+    return True  # Basic connectivity works
+
+
+def load_proxies_from_txt(config_path: Path) -> List[Dict]:
+    """Load proxies from .txt file (one ip:port per line)."""
+    proxies = []
+    if not config_path.exists():
+        return proxies
     
     try:
-        with open(config_path, 'w', encoding='utf-8') as f:
-            json.dump(config, f, indent=2)
+        with open(config_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                # Skip comments and empty lines
+                if not line or line.startswith('#'):
+                    continue
+                
+                proxy_dict = proxy_str_to_dict(line)
+                if proxy_dict:
+                    proxies.append(proxy_dict)
+    except Exception as e:
+        TUI.warning(f"Failed to load proxies from {config_path}: {e}")
+    
+    return proxies
+
+
+def load_blacklist(blacklist_path: Path) -> Set[str]:
+    """Load blacklisted proxy keys from blacklist file."""
+    blacklist = set()
+    if not blacklist_path.exists():
+        return blacklist
+    
+    try:
+        with open(blacklist_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    blacklist.add(line)
+    except Exception:
+        pass
+    
+    return blacklist
+
+
+def save_blacklist(blacklist_path: Path, blacklist: Set[str]):
+    """Save blacklist to file."""
+    try:
+        with open(blacklist_path, 'w', encoding='utf-8') as f:
+            f.write("# Blacklisted proxies (one per line)\n")
+            for proxy_key in sorted(blacklist):
+                f.write(f"{proxy_key}\n")
     except Exception as e:
         TUI.error(f"Failed to save blacklist: {e}")
 
 
-def add_to_blacklist(config_path: Path, proxy: Dict):
+def add_to_blacklist(blacklist_path: Path, proxy: Dict):
     """Add a proxy to the blacklist."""
-    blacklist = load_blacklist(config_path)
+    blacklist = load_blacklist(blacklist_path)
     proxy_key = get_proxy_key(proxy)
     blacklist.add(proxy_key)
-    save_blacklist(config_path, blacklist)
-
-
-def refresh_proxies(config_path: Path = None, min_working: int = 5) -> int:
-    """
-    Fetch and health check proxies, save working ones to config.
-    
-    Args:
-        config_path: Path to proxy config file. If None, uses default.
-        min_working: Minimum number of working proxies to fetch
-        
-    Returns:
-        Number of working proxies saved
-    """
-    if config_path is None:
-        config_path = Path(__file__).parent.parent.parent / "proxy_config.json"
-    
-    TUI.info("Fetching fresh proxies from public sources...")
-    
-    # Load blacklist
-    blacklist = load_blacklist(config_path)
-    if blacklist:
-        TUI.info(f"Loaded {len(blacklist)} blacklisted proxies")
-    
-    # Fetch with blacklist filter
-    working_proxies = fetch_free_proxies(blacklist=blacklist, min_needed=min_working)
-    
-    if not working_proxies:
-        TUI.warning("No proxies fetched from public sources")
-        return 0
-    
-    if working_proxies:
-        # Save working proxies to config (preserve blacklist)
-        try:
-            config = {}
-            if config_path.exists():
-                with open(config_path, 'r', encoding='utf-8') as f:
-                    config = json.load(f)
-            
-            config['proxies'] = working_proxies
-            
-            with open(config_path, 'w', encoding='utf-8') as f:
-                json.dump(config, f, indent=2)
-            TUI.success(f"Saved {len(working_proxies)} working proxies to {config_path}")
-        except Exception as e:
-            TUI.error(f"Failed to save proxies: {e}")
-    else:
-        TUI.warning("No working proxies found")
-    
-    return len(working_proxies)
+    save_blacklist(blacklist_path, blacklist)

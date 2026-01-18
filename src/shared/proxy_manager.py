@@ -7,8 +7,8 @@ from typing import Dict, List, Optional, Set, Tuple
 import requests
 
 from shared.proxy_refresh import (
-    health_check_proxy, refresh_proxies, get_proxy_key, 
-    load_blacklist, add_to_blacklist, FBREF_TEST_URL
+    health_check_proxy, get_proxy_key, 
+    load_proxies_from_txt, load_blacklist, save_blacklist, add_to_blacklist
 )
 from shared.tui import TUI
 
@@ -20,16 +20,17 @@ class ProxyManager:
     RATE_LIMIT_COOLDOWN = 600  # 10 minutes
     
     def __init__(self, config_path: Optional[Path] = None, no_proxy: bool = False, 
-                 refresh_proxies_flag: bool = True):
+                 refresh_proxies_flag: bool = False):
         """
         Initialize proxy manager.
         
         Args:
-            config_path: Path to proxy config file
+            config_path: Path to proxy config .txt file
             no_proxy: If True, disable proxy usage
-            refresh_proxies_flag: If True, auto-refresh when < 5 working proxies
+            refresh_proxies_flag: If True, auto-refresh when < 5 working proxies (disabled by default)
         """
-        self.config_path = config_path or Path(__file__).parent.parent.parent / "proxy_config.json"
+        self.config_path = config_path or Path(__file__).parent.parent.parent / "proxy_config.txt"
+        self.blacklist_path = self.config_path.parent / "proxy_blacklist.txt"
         self.no_proxy = no_proxy
         self.proxies: List[Dict] = []
         self.current_proxy_index = 0
@@ -40,7 +41,7 @@ class ProxyManager:
         # Rate-limited proxy tracking: {proxy_key: timestamp_when_rate_limited}
         self.rate_limited_proxies: Dict[str, float] = {}
         
-        # Blacklist (persistent, loaded from config)
+        # Blacklist (persistent, loaded from blacklist file)
         self.blacklist: Set[str] = set()
         
         if not no_proxy:
@@ -48,65 +49,43 @@ class ProxyManager:
             self._load_proxies()
             # Health check proxies after loading
             self.precheck_proxies()
-            
-            # Auto-refresh if needed
-            if self.refresh_proxies_flag and len(self.proxies) < 5:
-                TUI.info(f"Only {len(self.proxies)} working proxies, refreshing...")
-                refreshed_count = refresh_proxies(self.config_path)
-                if refreshed_count > 0:
-                    # Reload and re-check
-                    self._load_proxies()
-                    self.precheck_proxies()
     
     def _load_blacklist(self):
-        """Load blacklist from config file."""
-        self.blacklist = load_blacklist(self.config_path)
+        """Load blacklist from blacklist file."""
+        self.blacklist = load_blacklist(self.blacklist_path)
         if self.blacklist:
             TUI.info(f"Loaded {len(self.blacklist)} blacklisted proxies")
     
     def _load_proxies(self):
-        """Load proxies from config file or fetch free proxies."""
-        # Try to load from config file
+        """Load proxies from .txt config file."""
         if self.config_path.exists():
-            try:
-                with open(self.config_path, 'r', encoding='utf-8') as f:
-                    config = json.load(f)
-                    loaded_proxies = config.get('proxies', [])
-                    
-                    # Filter out blacklisted proxies
-                    self.proxies = [
-                        p for p in loaded_proxies 
-                        if get_proxy_key(p) not in self.blacklist
-                    ]
-                    
-                    if self.proxies:
-                        TUI.info(f"Loaded {len(self.proxies)} proxies from config")
-                        return
-            except Exception as e:
-                TUI.warning(f"Failed to load proxy config: {e}")
-        
-        # Try to refresh proxies
-        TUI.info("No proxies in config, fetching fresh proxies...")
-        refreshed = refresh_proxies(self.config_path)
-        if refreshed > 0:
-            self._load_proxies()  # Reload after refresh
+            loaded_proxies = load_proxies_from_txt(self.config_path)
+            
+            # Filter out blacklisted proxies
+            self.proxies = [
+                p for p in loaded_proxies 
+                if get_proxy_key(p) not in self.blacklist
+            ]
+            
+            if self.proxies:
+                TUI.info(f"Loaded {len(self.proxies)} proxies from {self.config_path}")
+            else:
+                TUI.warning(f"No proxies available in {self.config_path}")
         else:
-            TUI.warning("No proxies available, using direct connection")
+            TUI.warning(f"Proxy config file not found: {self.config_path}")
+            TUI.info("Using direct connection (no proxies)")
     
     def _save_proxies(self):
-        """Save current working proxies to config file."""
+        """Save current working proxies to .txt config file."""
         try:
-            config = {}
-            if self.config_path.exists():
-                with open(self.config_path, 'r', encoding='utf-8') as f:
-                    config = json.load(f)
-            
-            config['proxies'] = self.proxies
-            
             with open(self.config_path, 'w', encoding='utf-8') as f:
-                json.dump(config, f, indent=2)
-        except Exception:
-            pass
+                f.write("# Proxy configuration file\n")
+                f.write("# Format: one proxy per line as IP:PORT\n\n")
+                for proxy in self.proxies:
+                    proxy_key = get_proxy_key(proxy)
+                    f.write(f"{proxy_key}\n")
+        except Exception as e:
+            TUI.warning(f"Failed to save proxies: {e}")
     
     def precheck_proxies(self):
         """Health check all proxies and remove non-functional ones."""
@@ -116,7 +95,7 @@ class ProxyManager:
         initial_count = len(self.proxies)
         working_proxies = []
         
-        TUI.info(f"Health check: Testing {initial_count} proxies against FBref...")
+        TUI.info(f"Health check: Testing {initial_count} proxies...")
         
         for i, proxy in enumerate(self.proxies, 1):
             # Skip blacklisted
@@ -124,7 +103,7 @@ class ProxyManager:
                 TUI.warning(f"Proxy {i} is blacklisted, skipping")
                 continue
             
-            if health_check_proxy(proxy, target_url=FBREF_TEST_URL):
+            if health_check_proxy(proxy):
                 working_proxies.append(proxy)
             else:
                 TUI.warning(f"Proxy {i}/{initial_count} failed health check")
@@ -224,7 +203,7 @@ class ProxyManager:
         if add_to_blacklist_flag:
             key = get_proxy_key(proxy)
             self.blacklist.add(key)
-            add_to_blacklist(self.config_path, proxy)
+            add_to_blacklist(self.blacklist_path, proxy)
             TUI.info(f"Added proxy to blacklist")
     
     def get_available_proxy_count(self) -> int:

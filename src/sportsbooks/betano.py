@@ -21,18 +21,10 @@ import cloudscraper
 # Add src directory to path for shared imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from shared.tui import TUI
+from shared.scraper_utils import get_session
 
 # Betano API configuration
 BASE_URL = "https://www.betano.bet.br"
-
-# Request headers for Betano API
-HEADERS = {
-    'Accept': 'application/json, text/plain, */*',
-    'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
-    'Referer': 'https://www.betano.bet.br/sport/futebol/ligas/',
-    'x-language': '5',
-    'x-operator': '8',
-}
 
 
 class BetanoScraper:
@@ -44,10 +36,18 @@ class BetanoScraper:
         Args:
             delay: Delay between requests in seconds (default: 1.0)
         """
-        self.session = cloudscraper.create_scraper(
-            browser={'browser': 'chrome', 'platform': 'windows', 'desktop': True}
+        self.session = get_session(
+            referer='https://www.betano.bet.br/sport/futebol/ligas/',
+            origin='https://www.betano.bet.br',
+            accept='application/json, text/plain, */*',
+            accept_language='pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+            use_proxy=False
         )
-        self.session.headers.update(HEADERS)
+        # Add Betano-specific headers
+        self.session.headers.update({
+            'x-language': '5',
+            'x-operator': '8',
+        })
         self.delay = delay
         self._request_count = 0
     

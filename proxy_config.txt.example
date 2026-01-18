@@ -1,0 +1,6 @@
+# Proxy configuration file
+# Format: one proxy per line as IP:PORT
+# Example:
+142.111.48.253:7030
+23.95.150.145:6114
+198.23.239.134:6540

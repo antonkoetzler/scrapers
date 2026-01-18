@@ -10,7 +10,7 @@ This repository contains scrapers for various sportsbooks, designed to collect f
 
 - `shared/` - Reusable utilities (proxy management, TUI, scraper utils)
 - `sportsbooks/` - Sportsbook-specific scrapers (Betano, etc.)
-- `sports_data/` - Sports data sources (FBref, etc.)
+- `sports_data/` - Sports data sources (Flashscore, Livescore, etc.)
 - `docs/` - Detailed documentation for specific functionality
 
 ## Quick Start

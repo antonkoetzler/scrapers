@@ -14,7 +14,9 @@ class RateLimitError(Exception):
 
 
 def request_with_fallback(method: str, url: str, max_retries: int = 3, 
-                         use_proxy: bool = True, **kwargs) -> Any:
+                         use_proxy: bool = True, referer: str = None,
+                         origin: str = None, accept: str = None,
+                         accept_language: str = None, **kwargs) -> Any:
     """
     Make HTTP request with automatic proxy fallback and hybrid 429 handling.
     
@@ -53,7 +55,13 @@ def request_with_fallback(method: str, url: str, max_retries: int = 3,
         
         for attempt in range(max_proxy_attempts):
             try:
-                session = get_session(use_proxy=True)
+                session = get_session(
+                    referer=referer,
+                    origin=origin,
+                    accept=accept,
+                    accept_language=accept_language,
+                    use_proxy=True
+                )
                 current_proxy = proxy_manager.get_proxy()
                 
                 if not current_proxy:
@@ -118,7 +126,13 @@ def request_with_fallback(method: str, url: str, max_retries: int = 3,
     if use_proxy:
         TUI.info("Using direct connection")
     
-    session = get_session(use_proxy=False)
+    session = get_session(
+        referer=referer,
+        origin=origin,
+        accept=accept,
+        accept_language=accept_language,
+        use_proxy=False
+    )
     
     for attempt in range(max_retries):
         try:
