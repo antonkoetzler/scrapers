@@ -1,9 +1,11 @@
-"""Livescore scraper for match scores and results."""
+"""Livescore scraper for match scores, results, and odds."""
 import json
 import sys
 import time
+import re
+import requests
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 
 from bs4 import BeautifulSoup
 
@@ -24,6 +26,136 @@ from shared.league_config import get_livescore_leagues
 
 # Load league mapping from centralized config
 LEAGUE_MAPPING = get_livescore_leagues()
+
+# GraphQL endpoint for odds (same as FlashScore)
+ODDS_GRAPHQL_BASE = "https://global.ds.lsapp.eu/odds/pq_graphql"
+PROJECT_ID = 401
+
+
+def fetch_match_odds(event_id: str, geo_code: str = "BR", geo_subdivision: str = "BRSP") -> Optional[List[Dict]]:
+    """Fetch odds for a specific match using GraphQL API.
+    
+    Args:
+        event_id: Match event ID (e.g., "QJkIQSvA")
+        geo_code: Geo IP code (default: "BR")
+        geo_subdivision: Geo IP subdivision code (default: "BRSP")
+        
+    Returns:
+        List of odds dictionaries with bookmaker and odds data, or None if failed
+    """
+    try:
+        url = f"{ODDS_GRAPHQL_BASE}?_hash=oce&eventId={event_id}&projectId={PROJECT_ID}&geoIpCode={geo_code}&geoIpSubdivisionCode={geo_subdivision}"
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Referer': 'https://www.livescore.com/',
+            'Accept': 'application/json'
+        }
+        
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code != 200:
+            return None
+            
+        data = response.json()
+        odds_comparison = data.get('data', {}).get('findOddsByEventId', {})
+        if not odds_comparison:
+            return None
+            
+        markets = odds_comparison.get('markets', [])
+        all_odds = []
+        
+        for market in markets:
+            market_name = market.get('name', '')
+            market_type = market.get('marketType', '')
+            outcomes = market.get('outcomes', [])
+            
+            for outcome in outcomes:
+                outcome_name = outcome.get('name', '')
+                bookmaker_odds = outcome.get('bookmakerOdds', [])
+                
+                for bookmaker_odd in bookmaker_odds:
+                    bookmaker = bookmaker_odd.get('bookmaker', {})
+                    odds_value = bookmaker_odd.get('odds', None)
+                    
+                    if odds_value and bookmaker:
+                        all_odds.append({
+                            'market_name': market_name,
+                            'market_type': market_type,
+                            'outcome_name': outcome_name,
+                            'bookmaker_id': bookmaker.get('id'),
+                            'bookmaker_name': bookmaker.get('name'),
+                            'odds_value': float(odds_value) if odds_value else None
+                        })
+        
+        return all_odds if all_odds else None
+        
+    except Exception as e:
+        TUI.warning(f"Failed to fetch odds for event {event_id}: {e}")
+        return None
+
+
+def fetch_league_winner_odds(tournament_id: str, geo_code: str = "BR", geo_subdivision: str = "SP") -> Optional[List[Dict]]:
+    """Fetch league winner odds for a tournament using GraphQL API.
+    
+    Args:
+        tournament_id: Tournament/league ID (e.g., "KKay4EE8")
+        geo_code: Geo IP code (default: "BR")
+        geo_subdivision: Geo IP subdivision code (default: "SP")
+        
+    Returns:
+        List of league winner odds dictionaries with team and bookmaker data, or None if failed
+    """
+    try:
+        url = f"{ODDS_GRAPHQL_BASE}?_hash=lwo&tournamentId={tournament_id}&projectId={PROJECT_ID}&geoIpCode={geo_code}&geoIpSubdivisionCode={geo_subdivision}&page=1"
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Referer': 'https://www.livescore.com/',
+            'Accept': 'application/json'
+        }
+        
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code != 200:
+            return None
+            
+        data = response.json()
+        league_winner_odds = data.get('data', {}).get('getLeagueWinnerOdds', {})
+        if not league_winner_odds:
+            return None
+            
+        participants = league_winner_odds.get('participants', [])
+        odds_list = league_winner_odds.get('odds', [])
+        bookmakers_list = league_winner_odds.get('settings', {}).get('bookmakers', [])
+        
+        # Create lookup maps
+        participants_map = {p.get('id'): p.get('name') for p in participants}
+        bookmakers_map = {bm.get('bookmaker', {}).get('id'): bm.get('bookmaker', {}).get('name') 
+                         for bm in bookmakers_list}
+        
+        all_odds = []
+        for odd in odds_list:
+            participant_id = odd.get('participantId')
+            bookmaker_id = odd.get('bookmakerId')
+            odds_value = odd.get('value')
+            
+            if participant_id and bookmaker_id and odds_value:
+                team_name = participants_map.get(participant_id, '')
+                bookmaker_name = bookmakers_map.get(bookmaker_id, '')
+                
+                if team_name and bookmaker_name:
+                    all_odds.append({
+                        'market_name': 'League Winner',
+                        'market_type': 'league_winner',
+                        'team_name': team_name,
+                        'team_id': participant_id,
+                        'bookmaker_id': bookmaker_id,
+                        'bookmaker_name': bookmaker_name,
+                        'odds_value': float(odds_value) if odds_value else None
+                    })
+        
+        return all_odds if all_odds else None
+        
+    except Exception as e:
+        TUI.warning(f"Failed to fetch league winner odds for tournament {tournament_id}: {e}")
+        return None
 
 
 def extract_matches_from_html(soup: BeautifulSoup, league_name: str, season: str) -> List[Dict]:
@@ -83,6 +215,9 @@ def extract_matches_from_html(soup: BeautifulSoup, league_name: str, season: str
                                     if not start_dt:
                                         continue
                                     
+                                    # Extract event ID from event data
+                                    event_id = event.get('eventId') or event.get('id')
+                                    
                                     # Create match dict
                                     match = create_match_dict(
                                         home_team_name=home_team_name,
@@ -95,6 +230,15 @@ def extract_matches_from_html(soup: BeautifulSoup, league_name: str, season: str
                                         league=league_name,
                                         season=season
                                     )
+                                    
+                                    # Fetch odds if event ID found
+                                    if event_id:
+                                        odds = fetch_match_odds(str(event_id))
+                                        if odds:
+                                            match['odds'] = odds
+                                            TUI.info(f"    Found {len(odds)} odds for {home_team_name} vs {away_team_name}")
+                                        time.sleep(0.5)  # Delay between odds requests to avoid rate limiting
+                                    
                                     matches.append(match)
                                 
                                 return matches  # Return early if we found matches
@@ -111,13 +255,60 @@ def extract_matches_from_html(soup: BeautifulSoup, league_name: str, season: str
     return matches
 
 
-def scrape_league(league_name: str, season: str = None) -> Tuple[List[Dict], bool]:
+def extract_tournament_id_from_html(html: str) -> Optional[str]:
+    """Extract tournament ID from HTML page.
+    
+    Args:
+        html: Page HTML content
+        
+    Returns:
+        Tournament ID string or None if not found
+    """
+    try:
+        # Look for tournament ID in various patterns
+        patterns = [
+            r'tournamentId["\']?\s*[:=]\s*["\']?([A-Za-z0-9]{8})',
+            r'tournament["\']?\s*[:=]\s*["\']?([A-Za-z0-9]{8})',
+            r'leagueId["\']?\s*[:=]\s*["\']?([A-Za-z0-9]{8})',
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, html, re.I)
+            if match:
+                return match.group(1)
+        
+        # Try to find in __NEXT_DATA__
+        soup = BeautifulSoup(html, 'html.parser')
+        scripts = soup.find_all('script', id='__NEXT_DATA__')
+        for script in scripts:
+            if script.string:
+                try:
+                    data = json.loads(script.string)
+                    # Navigate to find tournament ID
+                    if 'props' in data and 'pageProps' in data['props']:
+                        page_props = data['props']['pageProps']
+                        if 'initialData' in page_props:
+                            initial_data = page_props['initialData']
+                            tournament_id = initial_data.get('tournamentId') or initial_data.get('tournament', {}).get('id')
+                            if tournament_id:
+                                return str(tournament_id)
+                except (json.JSONDecodeError, KeyError, TypeError):
+                    continue
+                    
+        return None
+        
+    except Exception as e:
+        TUI.warning(f"Failed to extract tournament ID: {e}")
+        return None
+
+
+def scrape_league(league_name: str, season: str = None) -> Tuple[List[Dict], bool, Optional[List[Dict]]]:
     """Scrape matches for a specific league."""
     # Normalize league name (handle encoding issues cross-platform)
     normalized_name = normalize_league_name(league_name, LEAGUE_MAPPING)
     if normalized_name is None:
         TUI.warning(f"Unknown league: {league_name}")
-        return [], False
+        return [], False, None
     league_name = normalized_name
     
     if season is None:
@@ -142,17 +333,25 @@ def scrape_league(league_name: str, season: str = None) -> Tuple[List[Dict], boo
         
         if response.status_code == 403:
             TUI.warning(f"Access denied (403) for {league_name} - skipping")
-            return [], False
+            return [], False, None
         
         if response.status_code != 200:
             TUI.error(f"Failed to fetch {league_name}: Status {response.status_code}")
-            return [], False
+            return [], False, None
         
         soup = BeautifulSoup(response.text, 'html.parser')
         matches = extract_matches_from_html(soup, league_name, season)
         
+        # Try to fetch league winner odds
+        tournament_id = extract_tournament_id_from_html(response.text)
+        league_winner_odds = None
+        if tournament_id:
+            league_winner_odds = fetch_league_winner_odds(tournament_id)
+            if league_winner_odds:
+                TUI.info(f"  Found {len(league_winner_odds)} league winner odds")
+        
         TUI.success(f"Found {len(matches)} completed matches in {league_name}")
-        return matches, False
+        return matches, False, league_winner_odds
         
     except RateLimitError as e:
         TUI.error(f"Rate limited scraping {league_name}: {e}")
@@ -161,9 +360,9 @@ def scrape_league(league_name: str, season: str = None) -> Tuple[List[Dict], boo
         error_str = str(e)
         if '403' in error_str or 'Forbidden' in error_str:
             TUI.warning(f"Access denied (403) for {league_name} - skipping")
-            return [], False
+            return [], False, None
         TUI.error(f"Error scraping {league_name}: {e}")
-        return [], False
+        return [], False, None
 
 
 def main():
@@ -202,8 +401,12 @@ def main():
             TUI.warning(f"Unknown league: {league_name}, skipping")
             continue
         
-        matches, was_rate_limited = scrape_league(normalized_name, season)
+        matches, was_rate_limited, league_winner_odds = scrape_league(normalized_name, season)
         all_matches.extend(matches)
+        
+        # Store league winner odds if available (could be added to output structure)
+        if league_winner_odds:
+            TUI.info(f"  League winner odds: {len(league_winner_odds)} entries")
         
         if was_rate_limited:
             rate_limited_count += 1

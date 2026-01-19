@@ -454,16 +454,19 @@ class BetanoScraper:
                 TUI.info(f"  Fixtures: {len(fixtures)}")
                 
                 # Fetch all markets for each fixture
+                total_odds = 0
                 for fixture in fixtures:
                     fixture_id = fixture['fixture_id']
                     odds = self.fetch_fixture_markets(fixture_id)
                     fixture['odds'] = odds
+                    total_odds += len(odds)
                     home = fixture['home_team_name'][:20]
                     away = fixture['away_team_name'][:20]
                     TUI.info(f"    {home} vs {away}: {len(odds)} odds")
                     self._rate_limit()
                 
                 league_result['fixtures'] = fixtures
+                TUI.success(f"  ✓ League {league_name}: {len(fixtures)} fixtures, {total_odds} odds")
             else:
                 TUI.info(f"  No fixtures")
             
@@ -484,7 +487,9 @@ class BetanoScraper:
                 league_result['leagueWinner'] = league_winner
             
             results.append(league_result)
+            TUI.success(f"✓ Completed {league_name} ({i}/{len(leagues)})")
         
+        TUI.success(f"\n✓ Successfully scraped {len(results)} leagues")
         return results
     
     # =========================================================================
@@ -543,12 +548,13 @@ def main():
         TUI.header("=" * 60)
         TUI.header("SUMMARY")
         TUI.header("=" * 60)
-        TUI.info(f"Leagues: {len(results)}")
-        TUI.info(f"Fixtures: {total_fixtures}")
-        TUI.info(f"Total odds: {total_odds}")
-        TUI.info(f"Top scorer selections: {total_top_scorer}")
-        TUI.info(f"League winner selections: {total_league_winner}")
+        TUI.success(f"✓ Leagues scraped: {len(results)}")
+        TUI.success(f"✓ Fixtures: {total_fixtures}")
+        TUI.success(f"✓ Total odds: {total_odds}")
+        TUI.success(f"✓ Top scorer selections: {total_top_scorer}")
+        TUI.success(f"✓ League winner selections: {total_league_winner}")
         TUI.info(f"Requests made: {scraper._request_count}")
+        TUI.success(f"\n✓ Betano scraper completed successfully!")
         
         # Output
         indent = 2 if args.pretty else None
