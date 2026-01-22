@@ -92,6 +92,37 @@ def parse_datetime_string(dt_str: str, format_str: str = "%Y%m%d%H%M%S") -> Opti
         return None
 
 
+def is_esports_match(home_team_name: str, away_team_name: str) -> bool:
+    """Check if a match is an esports match based on team name patterns.
+    
+    Esports matches typically have patterns like:
+    - <Team name> (Player) v <Team name> (Player)
+    - Team names containing "(Player)" or similar patterns
+    
+    Args:
+        home_team_name: Home team name
+        away_team_name: Away team name
+    
+    Returns:
+        True if this appears to be an esports match, False otherwise
+    """
+    if not home_team_name or not away_team_name:
+        return False
+    
+    # Check for (Player) pattern in either team name
+    player_pattern = r'\([^)]*[Pp]layer[^)]*\)'
+    if re.search(player_pattern, home_team_name) or re.search(player_pattern, away_team_name):
+        return True
+    
+    # Check for other common esports patterns (single name in parentheses)
+    # This catches patterns like "Team (Messi)" or "Team (Ronaldo)"
+    single_name_pattern = r'\([A-Z][a-z]+\)'
+    if re.search(single_name_pattern, home_team_name) or re.search(single_name_pattern, away_team_name):
+        return True
+    
+    return False
+
+
 def create_match_dict(
     home_team_name: str,
     away_team_name: str,

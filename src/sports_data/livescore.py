@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from shared.tui import TUI
 from shared.scraper_utils import init_proxy_manager, get_proxy_manager
 from shared.request_with_fallback import request_with_fallback, get_request_delay, RateLimitError
+from shared.long_request_warning import LongRequestWarning
 from shared.match_utils import (
     get_current_season,
     parse_datetime_string,
@@ -51,7 +52,9 @@ def fetch_match_odds(event_id: str, geo_code: str = "BR", geo_subdivision: str =
             'Accept': 'application/json'
         }
         
-        response = requests.get(url, headers=headers, timeout=10)
+        with LongRequestWarning(threshold_seconds=25.0,
+                               warning_message="Livescore odds API request is taking longer than expected..."):
+            response = requests.get(url, headers=headers, timeout=10)
         if response.status_code != 200:
             return None
             
@@ -112,7 +115,9 @@ def fetch_league_winner_odds(tournament_id: str, geo_code: str = "BR", geo_subdi
             'Accept': 'application/json'
         }
         
-        response = requests.get(url, headers=headers, timeout=10)
+        with LongRequestWarning(threshold_seconds=25.0,
+                               warning_message="Livescore league winner odds API request is taking longer than expected..."):
+            response = requests.get(url, headers=headers, timeout=10)
         if response.status_code != 200:
             return None
             
@@ -198,6 +203,11 @@ def extract_matches_from_html(soup: BeautifulSoup, league_name: str, season: str
                                     # Extract match data
                                     home_team_name = event.get('homeTeamName', '').strip()
                                     away_team_name = event.get('awayTeamName', '').strip()
+                                    
+                                    # Filter out esports matches
+                                    from shared.match_utils import is_esports_match
+                                    if is_esports_match(home_team_name, away_team_name):
+                                        continue
                                     
                                     # Parse scores
                                     try:

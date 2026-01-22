@@ -22,6 +22,7 @@ import cloudscraper
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from shared.tui import TUI
 from shared.scraper_utils import get_session
+from shared.long_request_warning import LongRequestWarning
 
 # Betano API configuration
 BASE_URL = "https://www.betano.bet.br"
@@ -65,7 +66,9 @@ class BetanoScraper:
         
         for attempt in range(max_retries):
             try:
-                resp = self.session.get(url, timeout=30)
+                with LongRequestWarning(threshold_seconds=25.0,
+                                       warning_message=f"Betano API request is taking longer than expected (attempt {attempt + 1}/{max_retries})..."):
+                    resp = self.session.get(url, timeout=30)
                 
                 if resp.status_code == 429:
                     wait = (attempt + 1) * 5
@@ -129,7 +132,7 @@ class BetanoScraper:
         Returns:
             List of dicts with 'id' and 'name' for each football league.
         """
-        TUI.info("Discovering FOOT leagues from leagues page...")
+        TUI.info("🔍 Discovering FOOT leagues from leagues page...")
         
         html = self._request_html(f"{BASE_URL}/sport/futebol/ligas/")
         
@@ -222,12 +225,20 @@ class BetanoScraper:
             if len(participants) < 2:
                 continue
             
+            home_team_name = participants[0].get('name', '')
+            away_team_name = participants[1].get('name', '')
+            
+            # Filter out esports matches
+            from shared.match_utils import is_esports_match
+            if is_esports_match(home_team_name, away_team_name):
+                continue
+            
             fixture = {
                 'fixture_id': str(event.get('id')),
                 'home_team_id': str(participants[0].get('id')),
-                'home_team_name': participants[0].get('name'),
+                'home_team_name': home_team_name,
                 'away_team_id': str(participants[1].get('id')),
-                'away_team_name': participants[1].get('name'),
+                'away_team_name': away_team_name,
                 'start_time': self._convert_timestamp(event.get('startTime', 0)),
                 'status': 'scheduled',
                 'url': event.get('url', ''),
@@ -410,6 +421,77 @@ class BetanoScraper:
     # MAIN SCRAPING LOGIC
     # =========================================================================
     
+    def scrape_league(self, league_id: int) -> Optional[Dict]:
+        """Scrape a single league with fixtures, markets, top scorer, and league winner.
+        
+        Args:
+            league_id: League ID to scrape
+            
+        Returns:
+            League dict with all data, or None if failed
+        """
+        # Get league name (try to discover it, or use ID as fallback)
+        try:
+            leagues = self.discover_leagues()
+            league_info = next((l for l in leagues if l['id'] == league_id), None)
+            league_name = league_info['name'] if league_info else f'League {league_id}'
+        except:
+            league_name = f'League {league_id}'
+        
+        TUI.info(f"🏟️ Scraping {league_name} (ID: {league_id})")
+        
+        league_result = {
+            'league_id': league_id,
+            'league_name': league_name,
+        }
+        
+        try:
+            # Fetch fixtures
+            fixtures = self.fetch_league_fixtures(league_id)
+            self._rate_limit()
+            
+            if fixtures:
+                TUI.info(f"⚽ Found {len(fixtures)} fixtures")
+                
+                # Fetch all markets for each fixture
+                total_odds = 0
+                for fixture in fixtures:
+                    fixture_id = fixture['fixture_id']
+                    odds = self.fetch_fixture_markets(fixture_id)
+                    fixture['odds'] = odds
+                    total_odds += len(odds)
+                    home = fixture['home_team_name'][:20]
+                    away = fixture['away_team_name'][:20]
+                    TUI.info(f"  ⚽ {home} vs {away}: {len(odds)} odds")
+                    self._rate_limit()
+                
+                league_result['fixtures'] = fixtures
+                TUI.success(f"✅ {league_name}: {len(fixtures)} fixtures, {total_odds} odds")
+            else:
+                TUI.info(f"⚪ No fixtures found")
+            
+            # Fetch top scorer
+            top_scorer = self.fetch_top_scorer(league_id)
+            self._rate_limit()
+            
+            if top_scorer:
+                TUI.success(f"🏆 Top scorer: {len(top_scorer)} selections")
+                league_result['topScorer'] = top_scorer
+            
+            # Fetch league winner
+            league_winner = self.fetch_league_winner(league_id)
+            self._rate_limit()
+            
+            if league_winner:
+                TUI.success(f"👑 League winner: {len(league_winner)} selections")
+                league_result['leagueWinner'] = league_winner
+            
+            return league_result
+            
+        except Exception as e:
+            TUI.error(f"Error scraping league {league_id}: {e}")
+            return None
+    
     def scrape_all(self, max_leagues: int = None, league_ids: List[int] = None) -> List[Dict]:
         """Scrape all leagues with fixtures, markets, top scorer, and league winner.
         
@@ -513,10 +595,12 @@ def main():
     )
     parser.add_argument('--delay', type=float, default=1.0,
                        help='Delay between requests in seconds (default: 1.0)')
+    parser.add_argument('--league-id', type=int, default=None,
+                       help='Single league ID to scrape (for parallel execution)')
     parser.add_argument('--max-leagues', type=int, default=None,
                        help='Maximum number of leagues to scrape (default: all)')
     parser.add_argument('--league-ids', type=int, nargs='+',
-                       help='Specific league IDs to scrape')
+                       help='Specific league IDs to scrape (multiple)')
     parser.add_argument('--output', type=str, default=None,
                        help='Output file path (default: stdout)')
     parser.add_argument('--pretty', action='store_true',
@@ -524,17 +608,23 @@ def main():
     
     args = parser.parse_args()
     
-    TUI.header("=" * 60)
-    TUI.header("BETANO SCRAPER")
-    TUI.header("=" * 60)
-    
     scraper = BetanoScraper(delay=args.delay)
     
     try:
-        results = scraper.scrape_all(
-            max_leagues=args.max_leagues,
-            league_ids=args.league_ids
-        )
+        # If --league-id is specified, scrape only that league
+        if args.league_id is not None:
+            result = scraper.scrape_league(args.league_id)
+            if result is None:
+                TUI.error(f"Failed to scrape league {args.league_id}")
+                print(json.dumps([]))
+                sys.exit(1)
+            results = [result]
+        else:
+            # Otherwise, use scrape_all for multiple leagues
+            results = scraper.scrape_all(
+                max_leagues=args.max_leagues,
+                league_ids=args.league_ids
+            )
         
         # Summary
         total_fixtures = sum(len(l.get('fixtures', [])) for l in results)
@@ -545,16 +635,14 @@ def main():
         total_top_scorer = sum(len(l.get('topScorer', [])) for l in results)
         total_league_winner = sum(len(l.get('leagueWinner', [])) for l in results)
         
-        TUI.header("=" * 60)
-        TUI.header("SUMMARY")
-        TUI.header("=" * 60)
-        TUI.success(f"✓ Leagues scraped: {len(results)}")
-        TUI.success(f"✓ Fixtures: {total_fixtures}")
-        TUI.success(f"✓ Total odds: {total_odds}")
-        TUI.success(f"✓ Top scorer selections: {total_top_scorer}")
-        TUI.success(f"✓ League winner selections: {total_league_winner}")
-        TUI.info(f"Requests made: {scraper._request_count}")
-        TUI.success(f"\n✓ Betano scraper completed successfully!")
+        TUI.success(f"📊 Scraped {len(results)} league(s)")
+        TUI.success(f"⚽ {total_fixtures} fixtures")
+        TUI.success(f"💰 {total_odds} odds")
+        if total_top_scorer > 0:
+            TUI.success(f"🏆 {total_top_scorer} top scorer selections")
+        if total_league_winner > 0:
+            TUI.success(f"👑 {total_league_winner} league winner selections")
+        TUI.info(f"📡 {scraper._request_count} requests made")
         
         # Output
         indent = 2 if args.pretty else None

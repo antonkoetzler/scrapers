@@ -39,17 +39,33 @@ def get_playwright_context(playwright, headless: bool = False, proxy: Optional[D
     """
     brave_exe = find_brave_browser()
     
+    # Optimized browser args for reduced resource usage
+    browser_args = [
+        '--disable-blink-features=AutomationControlled',
+        '--disable-dev-shm-usage',  # Overcome limited resource problems
+        '--disable-gpu',  # Disable GPU hardware acceleration
+        '--no-sandbox',  # Disable sandbox for better performance
+        '--disable-setuid-sandbox',  # Disable setuid sandbox
+        '--disable-extensions',  # Disable extensions
+        '--disable-background-networking',  # Disable background networking
+        '--disable-background-timer-throttling',  # Disable background timer throttling
+        '--disable-renderer-backgrounding',  # Disable renderer backgrounding
+        '--disable-features=TranslateUI',  # Disable translation UI
+        '--disable-ipc-flooding-protection',  # Disable IPC flooding protection
+        '--memory-pressure-off',  # Turn off memory pressure
+    ]
+    
     if not brave_exe:
         TUI.warning("Brave browser not found, using default Chromium")
         browser = playwright.chromium.launch(
             headless=headless,
-            args=['--disable-blink-features=AutomationControlled']
+            args=browser_args
         )
     else:
         browser = playwright.chromium.launch(
             executable_path=brave_exe,
             headless=headless,
-            args=['--disable-blink-features=AutomationControlled']
+            args=browser_args
         )
     
     context_options = {
@@ -96,18 +112,21 @@ def extract_from_next_data(html: str) -> Optional[Dict]:
     return None
 
 
-def wait_for_content(page, timeout: int = 30000):
+def wait_for_content(page, timeout: int = 30000, wait_strategy: str = 'domcontentloaded'):
     """Wait for page content to load (with fallback).
     
     Args:
         page: Playwright page object
         timeout: Timeout in milliseconds
+        wait_strategy: Initial wait strategy ('domcontentloaded', 'networkidle', or 'load')
     """
     try:
-        page.wait_for_load_state('networkidle', timeout=timeout)
+        page.wait_for_load_state(wait_strategy, timeout=timeout)
     except:
         try:
-            page.wait_for_load_state('domcontentloaded', timeout=timeout)
+            # Fallback to domcontentloaded if preferred strategy fails
+            if wait_strategy != 'domcontentloaded':
+                page.wait_for_load_state('domcontentloaded', timeout=timeout)
         except:
             pass  # Continue anyway
 
@@ -181,9 +200,17 @@ def normalize_match_data(match: Dict, league_name: str, season: str) -> Optional
     if not match_date:
         return None
     
+    home_team_name = str(home_team).strip()
+    away_team_name = str(away_team).strip()
+    
+    # Filter out esports matches
+    from shared.match_utils import is_esports_match
+    if is_esports_match(home_team_name, away_team_name):
+        return None
+    
     return {
-        'home_team_name': str(home_team).strip(),
-        'away_team_name': str(away_team).strip(),
+        'home_team_name': home_team_name,
+        'away_team_name': away_team_name,
         'home_score': home_score,
         'away_score': away_score,
         'start_time': match_date.strftime('%Y-%m-%dT%H:%M:%SZ'),
