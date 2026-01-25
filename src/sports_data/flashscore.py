@@ -54,7 +54,6 @@ def _safe_log(level: str, message: str) -> None:
             TUI.success(message)
         
         # Force flush to ensure output appears immediately
-        import sys
         sys.stderr.flush()
         sys.stdout.flush()
 
@@ -599,12 +598,11 @@ def fetch_league_winner_odds(tournament_id: str, geo_code: str = "BR", geo_subdi
         return None
 
 
-def extract_tournament_id_from_page(page: Page, league_slug: str) -> Optional[str]:
+def extract_tournament_id_from_page(page: Page) -> Optional[str]:
     """Extract tournament ID from league page.
     
     Args:
         page: Playwright page object
-        league_slug: League slug for URL construction
         
     Returns:
         Tournament ID string or None if not found
@@ -833,7 +831,7 @@ def scrape_league(
             matches = extract_matches_from_page(page, normalized_name, season, max_workers_odds, market_types)
             
             # Try to fetch league winner odds
-            tournament_id = extract_tournament_id_from_page(page, league_info['slug'])
+            tournament_id = extract_tournament_id_from_page(page)
             league_winner_odds = None
             if tournament_id:
                 league_winner_odds = fetch_league_winner_odds(tournament_id)
