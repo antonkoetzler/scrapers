@@ -1,0 +1,1174 @@
+{
+  "successful": [
+    {
+      "id": 16947,
+      "name": "1 Diviso"
+    },
+    {
+      "id": 191718,
+      "name": "1 Diviso"
+    },
+    {
+      "id": 17126,
+      "name": "1. division"
+    },
+    {
+      "id": 17619,
+      "name": "1. diviso"
+    },
+    {
+      "id": 16952,
+      "name": "1. liga"
+    },
+    {
+      "id": 16849,
+      "name": "1A Pro League"
+    },
+    {
+      "id": 217,
+      "name": "2. Bundesliga"
+    },
+    {
+      "id": 191937,
+      "name": "2. Liga"
+    },
+    {
+      "id": 17223,
+      "name": "2. division"
+    },
+    {
+      "id": 17799,
+      "name": "2. diviso"
+    },
+    {
+      "id": 193821,
+      "name": "2. diviso"
+    },
+    {
+      "id": 17313,
+      "name": "3. Liga"
+    },
+    {
+      "id": 16816,
+      "name": "A-League"
+    },
+    {
+      "id": 181734,
+      "name": "A-League (F)"
+    },
+    {
+      "id": 197423,
+      "name": "ASEAN Club Championship"
+    },
+    {
+      "id": 24,
+      "name": "Alemanha"
+    },
+    {
+      "id": 17118,
+      "name": "Allsvenskan"
+    },
+    {
+      "id": 11462,
+      "name": "Arbia Saudita"
+    },
+    {
+      "id": 11319,
+      "name": "Argentina"
+    },
+    {
+      "id": 11321,
+      "name": "Austrlia"
+    },
+    {
+      "id": 11428,
+      "name": "Azerbaijo"
+    },
+    {
+      "id": 11463,
+      "name": "Bahrein"
+    },
+    {
+      "id": 11496,
+      "name": "Bangladeche"
+    },
+    {
+      "id": 194427,
+      "name": "Battle - Bundesliga - 2x4 minutos de jogo"
+    },
+    {
+      "id": 203859,
+      "name": "Battle - Campeonato Mundial de Clubes - 2x4 minutos de jogo"
+    },
+    {
+      "id": 194430,
+      "name": "Battle - Internacional - 2x4 minutos de jogo"
+    },
+    {
+      "id": 203861,
+      "name": "Battle - La Liga - 2x6 minutos de jogo"
+    },
+    {
+      "id": 194429,
+      "name": "Battle - Liga Europa - 2x4 minutos de jogo"
+    },
+    {
+      "id": 194426,
+      "name": "Battle - Premier League - 2x4 minutos de jogo"
+    },
+    {
+      "id": 202046,
+      "name": "Battle - Volta BundesLiga - 2x3 minutos de jogo"
+    },
+    {
+      "id": 202042,
+      "name": "Battle - Volta FA Cup - 2x3 minutos de jogo"
+    },
+    {
+      "id": 201720,
+      "name": "Battle - Volta International - 2x3 minutos de jogo"
+    },
+    {
+      "id": 205785,
+      "name": "Bengal Super League"
+    },
+    {
+      "id": 11324,
+      "name": "Blgica"
+    },
+    {
+      "id": 10004,
+      "name": "Brasil"
+    },
+    {
+      "id": 10016,
+      "name": "Brasileiro - Srie A Betano"
+    },
+    {
+      "id": 10017,
+      "name": "Brasileiro - Srie B"
+    },
+    {
+      "id": 11328,
+      "name": "Bulgria"
+    },
+    {
+      "id": 216,
+      "name": "Bundesliga"
+    },
+    {
+      "id": 16823,
+      "name": "Bundesliga"
+    },
+    {
+      "id": 11314,
+      "name": "CAF Clubes"
+    },
+    {
+      "id": 11318,
+      "name": "CONMEBOL Clubes"
+    },
+    {
+      "id": 187491,
+      "name": "Campeonato Acreano - Primeira Diviso"
+    },
+    {
+      "id": 187578,
+      "name": "Campeonato Amazonense - Srie A"
+    },
+    {
+      "id": 16872,
+      "name": "Campeonato Baiano - Srie A"
+    },
+    {
+      "id": 187416,
+      "name": "Campeonato Capixaba - Srie A"
+    },
+    {
+      "id": 16880,
+      "name": "Campeonato Carioca - Srie A"
+    },
+    {
+      "id": 16882,
+      "name": "Campeonato Catarinense - Srie A"
+    },
+    {
+      "id": 16884,
+      "name": "Campeonato Cearense - Srie A"
+    },
+    {
+      "id": 16887,
+      "name": "Campeonato Gacho - Srie A"
+    },
+    {
+      "id": 16888,
+      "name": "Campeonato Goiano - Primeira Diviso"
+    },
+    {
+      "id": 183634,
+      "name": "Campeonato Maranhense - Srie A"
+    },
+    {
+      "id": 185364,
+      "name": "Campeonato Mato-Grossense - Primeira Diviso"
+    },
+    {
+      "id": 16893,
+      "name": "Campeonato Mineiro - Mdulo I"
+    },
+    {
+      "id": 16894,
+      "name": "Campeonato Paraibano - Primeira Diviso"
+    },
+    {
+      "id": 16896,
+      "name": "Campeonato Paranaense - Primeira Diviso"
+    },
+    {
+      "id": 16901,
+      "name": "Campeonato Paulista - Srie A1"
+    },
+    {
+      "id": 17910,
+      "name": "Campeonato Paulista - Srie A2"
+    },
+    {
+      "id": 18137,
+      "name": "Campeonato Paulista - Srie A3"
+    },
+    {
+      "id": 16905,
+      "name": "Campeonato Pernambucano - Srie A1"
+    },
+    {
+      "id": 192225,
+      "name": "Campeonato Sul-Mato-Grossense - Srie A"
+    },
+    {
+      "id": 11447,
+      "name": "Catar"
+    },
+    {
+      "id": 16940,
+      "name": "Categora Primera A"
+    },
+    {
+      "id": 17123,
+      "name": "Challenge League"
+    },
+    {
+      "id": 17158,
+      "name": "Challenger Pro League"
+    },
+    {
+      "id": 1630,
+      "name": "Championship"
+    },
+    {
+      "id": 18093,
+      "name": "Championship"
+    },
+    {
+      "id": 187112,
+      "name": "Championship League"
+    },
+    {
+      "id": 11331,
+      "name": "Chile"
+    },
+    {
+      "id": 11336,
+      "name": "Chipre"
+    },
+    {
+      "id": 11396,
+      "name": "Clubes internacionais"
+    },
+    {
+      "id": 11333,
+      "name": "Colmbia"
+    },
+    {
+      "id": 16833,
+      "name": "Copa"
+    },
+    {
+      "id": 16946,
+      "name": "Copa"
+    },
+    {
+      "id": 10392,
+      "name": "Copa"
+    },
+    {
+      "id": 17087,
+      "name": "Copa"
+    },
+    {
+      "id": 184031,
+      "name": "Copa"
+    },
+    {
+      "id": 184143,
+      "name": "Copa (F)"
+    },
+    {
+      "id": 196103,
+      "name": "Copa Alagoas"
+    },
+    {
+      "id": 189817,
+      "name": "Copa Libertadores"
+    },
+    {
+      "id": 200639,
+      "name": "Copa Nacional de Selecciones"
+    },
+    {
+      "id": 189818,
+      "name": "Copa Sul-americana"
+    },
+    {
+      "id": 16842,
+      "name": "Copa da Blgica"
+    },
+    {
+      "id": 16954,
+      "name": "Copa da Dinamarca"
+    },
+    {
+      "id": 17072,
+      "name": "Copa da Liga"
+    },
+    {
+      "id": 17938,
+      "name": "Copa da Liga"
+    },
+    {
+      "id": 17483,
+      "name": "Copa da Liga"
+    },
+    {
+      "id": 10815,
+      "name": "Copa de Itlia"
+    },
+    {
+      "id": 182295,
+      "name": "Copa de Itlia (F)"
+    },
+    {
+      "id": 189813,
+      "name": "Copa do Mundo"
+    },
+    {
+      "id": 10067,
+      "name": "Copa do Rei"
+    },
+    {
+      "id": 205880,
+      "name": "Copa dos Campees (F)"
+    },
+    {
+      "id": 14363,
+      "name": "Coppa Italia Serie C"
+    },
+    {
+      "id": 11453,
+      "name": "Costa Rica"
+    },
+    {
+      "id": 11963,
+      "name": "Coupe de France"
+    },
+    {
+      "id": 11334,
+      "name": "Crocia"
+    },
+    {
+      "id": 17403,
+      "name": "Cymru Premier"
+    },
+    {
+      "id": 10486,
+      "name": "DFB-Pokal"
+    },
+    {
+      "id": 202977,
+      "name": "Delhi Senior Division"
+    },
+    {
+      "id": 11339,
+      "name": "Dinamarca"
+    },
+    {
+      "id": 184721,
+      "name": "Division Nationale"
+    },
+    {
+      "id": 195245,
+      "name": "Divisiones Regionales"
+    },
+    {
+      "id": 10215,
+      "name": "EFL Cup"
+    },
+    {
+      "id": 11387,
+      "name": "EUA"
+    },
+    {
+      "id": 189663,
+      "name": "EUROCOPA"
+    },
+    {
+      "id": 17370,
+      "name": "Eerste Divisie"
+    },
+    {
+      "id": 187668,
+      "name": "Eerste Klasse (F)"
+    },
+    {
+      "id": 11485,
+      "name": "Egito"
+    },
+    {
+      "id": 17080,
+      "name": "Ekstraklasa"
+    },
+    {
+      "id": 11488,
+      "name": "El Salvador"
+    },
+    {
+      "id": 205244,
+      "name": "Elite League Sub-21"
+    },
+    {
+      "id": 182215,
+      "name": "Elitedivisionen (F)"
+    },
+    {
+      "id": 11445,
+      "name": "Emirados Arabes Unidos"
+    },
+    {
+      "id": 17067,
+      "name": "Eredivisie"
+    },
+    {
+      "id": 91,
+      "name": "Esccia"
+    },
+    {
+      "id": 11435,
+      "name": "Eslovnia"
+    },
+    {
+      "id": 11392,
+      "name": "Eslovquia"
+    },
+    {
+      "id": 189438,
+      "name": "Esoccer"
+    },
+    {
+      "id": 2,
+      "name": "Espanha"
+    },
+    {
+      "id": 218,
+      "name": "FA Cup"
+    },
+    {
+      "id": 10346,
+      "name": "FA Cup"
+    },
+    {
+      "id": 186905,
+      "name": "FA Trophy"
+    },
+    {
+      "id": 181791,
+      "name": "FA Trophy"
+    },
+    {
+      "id": 189658,
+      "name": "FIFA Clubes"
+    },
+    {
+      "id": 198734,
+      "name": "Finalissima"
+    },
+    {
+      "id": 23,
+      "name": "Frana"
+    },
+    {
+      "id": 193712,
+      "name": "GFF League Division Two"
+    },
+    {
+      "id": 195867,
+      "name": "GT Leagues - 2x6 minutos de jogo"
+    },
+    {
+      "id": 11433,
+      "name": "Gales"
+    },
+    {
+      "id": 188513,
+      "name": "Gmbia"
+    },
+    {
+      "id": 90,
+      "name": "Grcia"
+    },
+    {
+      "id": 11434,
+      "name": "Guatemala"
+    },
+    {
+      "id": 204604,
+      "name": "H2H GG League - 2x4 minutos de jogo"
+    },
+    {
+      "id": 16941,
+      "name": "HNL"
+    },
+    {
+      "id": 11526,
+      "name": "Honduras"
+    },
+    {
+      "id": 11449,
+      "name": "Hong Kong"
+    },
+    {
+      "id": 11363,
+      "name": "Hungria"
+    },
+    {
+      "id": 11412,
+      "name": "Indonsia"
+    },
+    {
+      "id": 1,
+      "name": "Inglaterra"
+    },
+    {
+      "id": 11364,
+      "name": "Internacional"
+    },
+    {
+      "id": 11490,
+      "name": "Iraque"
+    },
+    {
+      "id": 11367,
+      "name": "Irlanda"
+    },
+    {
+      "id": 11377,
+      "name": "Irlanda do Norte"
+    },
+    {
+      "id": 10008,
+      "name": "Islndia"
+    },
+    {
+      "id": 11429,
+      "name": "Israel"
+    },
+    {
+      "id": 87,
+      "name": "Itlia"
+    },
+    {
+      "id": 17058,
+      "name": "J1 League"
+    },
+    {
+      "id": 11461,
+      "name": "Jamaica"
+    },
+    {
+      "id": 11372,
+      "name": "Japo"
+    },
+    {
+      "id": 17160,
+      "name": "Jogos Amistoso de Clubes"
+    },
+    {
+      "id": 182080,
+      "name": "Jogos Amistoso de Clubes (F)"
+    },
+    {
+      "id": 17026,
+      "name": "Jogos Amistosos"
+    },
+    {
+      "id": 17228,
+      "name": "Jogos Amistosos (F)"
+    },
+    {
+      "id": 11443,
+      "name": "Jordnia"
+    },
+    {
+      "id": 17069,
+      "name": "KNVB Beker"
+    },
+    {
+      "id": 182303,
+      "name": "KNVB Beker (F)"
+    },
+    {
+      "id": 16921,
+      "name": "Kupa na Bulgaria"
+    },
+    {
+      "id": 11473,
+      "name": "Kuwait"
+    },
+    {
+      "id": 5,
+      "name": "LaLiga"
+    },
+    {
+      "id": 527,
+      "name": "League One"
+    },
+    {
+      "id": 1672,
+      "name": "League One"
+    },
+    {
+      "id": 203791,
+      "name": "League Sub-21"
+    },
+    {
+      "id": 4,
+      "name": "League Two"
+    },
+    {
+      "id": 1673,
+      "name": "League Two"
+    },
+    {
+      "id": 17088,
+      "name": "Liga 1"
+    },
+    {
+      "id": 17079,
+      "name": "Liga 1"
+    },
+    {
+      "id": 17839,
+      "name": "Liga 1"
+    },
+    {
+      "id": 17385,
+      "name": "Liga 2"
+    },
+    {
+      "id": 17524,
+      "name": "Liga 2"
+    },
+    {
+      "id": 17391,
+      "name": "Liga Alef"
+    },
+    {
+      "id": 17494,
+      "name": "Liga Bet"
+    },
+    {
+      "id": 189602,
+      "name": "Liga Conferncia"
+    },
+    {
+      "id": 188567,
+      "name": "Liga Europa"
+    },
+    {
+      "id": 17572,
+      "name": "Liga FPD"
+    },
+    {
+      "id": 17264,
+      "name": "Liga MX"
+    },
+    {
+      "id": 17412,
+      "name": "Liga Nacional"
+    },
+    {
+      "id": 18165,
+      "name": "Liga Nacional"
+    },
+    {
+      "id": 195785,
+      "name": "Liga Profesional"
+    },
+    {
+      "id": 190848,
+      "name": "Liga Revelao Sub-23"
+    },
+    {
+      "id": 181553,
+      "name": "Liga de Ascenso"
+    },
+    {
+      "id": 195435,
+      "name": "Liga de Expansion MX"
+    },
+    {
+      "id": 16932,
+      "name": "Liga de Primera"
+    },
+    {
+      "id": 193723,
+      "name": "Liga de Reservas"
+    },
+    {
+      "id": 16732,
+      "name": "Liga dos Campees"
+    },
+    {
+      "id": 188566,
+      "name": "Liga dos Campees"
+    },
+    {
+      "id": 197335,
+      "name": "Liga dos Campees (F)"
+    },
+    {
+      "id": 17491,
+      "name": "Ligat Ha'al"
+    },
+    {
+      "id": 215,
+      "name": "Ligue 1"
+    },
+    {
+      "id": 181739,
+      "name": "Ligue 1"
+    },
+    {
+      "id": 10467,
+      "name": "Ligue 2"
+    },
+    {
+      "id": 188713,
+      "name": "Luxemburgo"
+    },
+    {
+      "id": 17103,
+      "name": "MLS"
+    },
+    {
+      "id": 11491,
+      "name": "Malta"
+    },
+    {
+      "id": 189260,
+      "name": "Mauritnia"
+    },
+    {
+      "id": 188794,
+      "name": "Mianmar"
+    },
+    {
+      "id": 182181,
+      "name": "Mumbai Premier League"
+    },
+    {
+      "id": 190084,
+      "name": "Mumbai Super Division"
+    },
+    {
+      "id": 11375,
+      "name": "Mxico"
+    },
+    {
+      "id": 17024,
+      "name": "NB I"
+    },
+    {
+      "id": 11962,
+      "name": "National"
+    },
+    {
+      "id": 190021,
+      "name": "National 3"
+    },
+    {
+      "id": 1697,
+      "name": "National League"
+    },
+    {
+      "id": 188708,
+      "name": "Nigria"
+    },
+    {
+      "id": 193969,
+      "name": "Odds Turbinadas"
+    },
+    {
+      "id": 189413,
+      "name": "Odds Turbinadas"
+    },
+    {
+      "id": 11379,
+      "name": "Paraguai"
+    },
+    {
+      "id": 16918,
+      "name": "Parva Liga"
+    },
+    {
+      "id": 11376,
+      "name": "Pases Baixos"
+    },
+    {
+      "id": 11380,
+      "name": "Peru"
+    },
+    {
+      "id": 17113,
+      "name": "Pohar"
+    },
+    {
+      "id": 17427,
+      "name": "Pohar FACR"
+    },
+    {
+      "id": 11381,
+      "name": "Polnia"
+    },
+    {
+      "id": 11382,
+      "name": "Portugal"
+    },
+    {
+      "id": 17611,
+      "name": "Premier League"
+    },
+    {
+      "id": 17620,
+      "name": "Premier League"
+    },
+    {
+      "id": 17906,
+      "name": "Premier League"
+    },
+    {
+      "id": 17545,
+      "name": "Premier League"
+    },
+    {
+      "id": 181647,
+      "name": "Premier League"
+    },
+    {
+      "id": 182106,
+      "name": "Premier League"
+    },
+    {
+      "id": 184030,
+      "name": "Premier League (F)"
+    },
+    {
+      "id": 203701,
+      "name": "Premier League Sub-22"
+    },
+    {
+      "id": 1647,
+      "name": "Premiership"
+    },
+    {
+      "id": 17073,
+      "name": "Premiership"
+    },
+    {
+      "id": 17727,
+      "name": "Premiership"
+    },
+    {
+      "id": 17538,
+      "name": "Premyer Liqa"
+    },
+    {
+      "id": 17078,
+      "name": "Primeira Diviso"
+    },
+    {
+      "id": 17788,
+      "name": "Primeira Diviso"
+    },
+    {
+      "id": 17083,
+      "name": "Primeira Liga"
+    },
+    {
+      "id": 17041,
+      "name": "Primeira diviso"
+    },
+    {
+      "id": 197049,
+      "name": "Primera Division RFEF"
+    },
+    {
+      "id": 184866,
+      "name": "Primera Division de Ascenso"
+    },
+    {
+      "id": 17766,
+      "name": "Pro League"
+    },
+    {
+      "id": 17530,
+      "name": "Pro League"
+    },
+    {
+      "id": 17518,
+      "name": "Pro League"
+    },
+    {
+      "id": 191910,
+      "name": "Pro League"
+    },
+    {
+      "id": 203500,
+      "name": "Pro League Sub-23"
+    },
+    {
+      "id": 17695,
+      "name": "PrvaLiga"
+    },
+    {
+      "id": 188472,
+      "name": "Qunia"
+    },
+    {
+      "id": 17407,
+      "name": "Recopa Sul-americana"
+    },
+    {
+      "id": 11338,
+      "name": "Repblica Tcheca"
+    },
+    {
+      "id": 18262,
+      "name": "Reservas da Primera Diviso"
+    },
+    {
+      "id": 11383,
+      "name": "Romnia"
+    },
+    {
+      "id": 188592,
+      "name": "Ruanda"
+    },
+    {
+      "id": 17900,
+      "name": "Santosh Trophy"
+    },
+    {
+      "id": 203735,
+      "name": "Second Division B"
+    },
+    {
+      "id": 10000,
+      "name": "Segunda Divisin"
+    },
+    {
+      "id": 12227,
+      "name": "Segunda Division RFEF"
+    },
+    {
+      "id": 187051,
+      "name": "Segunda Diviso"
+    },
+    {
+      "id": 193121,
+      "name": "Southern League - Division One South"
+    },
+    {
+      "id": 192991,
+      "name": "Southern League - Premier Division South"
+    },
+    {
+      "id": 1635,
+      "name": "Srie A"
+    },
+    {
+      "id": 10210,
+      "name": "Srie B"
+    },
+    {
+      "id": 17714,
+      "name": "Srie C"
+    },
+    {
+      "id": 11389,
+      "name": "Srvia"
+    },
+    {
+      "id": 17539,
+      "name": "Stars League"
+    },
+    {
+      "id": 17796,
+      "name": "Stars League"
+    },
+    {
+      "id": 11394,
+      "name": "Sua"
+    },
+    {
+      "id": 11393,
+      "name": "Sucia"
+    },
+    {
+      "id": 1636,
+      "name": "Super League 1"
+    },
+    {
+      "id": 193128,
+      "name": "Super League 2"
+    },
+    {
+      "id": 17093,
+      "name": "Super Lig"
+    },
+    {
+      "id": 17122,
+      "name": "Super Liga"
+    },
+    {
+      "id": 189785,
+      "name": "Super Liga"
+    },
+    {
+      "id": 186111,
+      "name": "Super Liga"
+    },
+    {
+      "id": 17246,
+      "name": "Super Liga (F)"
+    },
+    {
+      "id": 184591,
+      "name": "Super Liga (F)"
+    },
+    {
+      "id": 17108,
+      "name": "SuperLiga"
+    },
+    {
+      "id": 16923,
+      "name": "Supercopa"
+    },
+    {
+      "id": 191952,
+      "name": "Supercopa"
+    },
+    {
+      "id": 188696,
+      "name": "Supercopa"
+    },
+    {
+      "id": 193989,
+      "name": "Supercopa Rei"
+    },
+    {
+      "id": 17315,
+      "name": "Superliga"
+    },
+    {
+      "id": 16955,
+      "name": "Superligaen"
+    },
+    {
+      "id": 17439,
+      "name": "TFF 1. Lig"
+    },
+    {
+      "id": 18199,
+      "name": "TFF 2. Lig"
+    },
+    {
+      "id": 181811,
+      "name": "TT Pro League"
+    },
+    {
+      "id": 17166,
+      "name": "Taa"
+    },
+    {
+      "id": 11425,
+      "name": "Tailndia"
+    },
+    {
+      "id": 17377,
+      "name": "Thai League 1"
+    },
+    {
+      "id": 188482,
+      "name": "Trindade Tobago"
+    },
+    {
+      "id": 188478,
+      "name": "Tunsia"
+    },
+    {
+      "id": 11384,
+      "name": "Turquia"
+    },
+    {
+      "id": 189656,
+      "name": "UEFA Clubes"
+    },
+    {
+      "id": 188506,
+      "name": "Uganda"
+    },
+    {
+      "id": 11388,
+      "name": "Uruguai"
+    },
+    {
+      "id": 188815,
+      "name": "Zmbia"
+    },
+    {
+      "id": 201034,
+      "name": "eAdriatic League - Internacional - 2x5 minutos de jogo"
+    },
+    {
+      "id": 201312,
+      "name": "eAdriatic League - La Liga - 2x5 minutos de jogo"
+    },
+    {
+      "id": 201037,
+      "name": "eAdriatic League - Premier League - 2x5 minutos de jogo"
+    },
+    {
+      "id": 11481,
+      "name": "frica do Sul"
+    },
+    {
+      "id": 11369,
+      "name": "ndia"
+    },
+    {
+      "id": 11322,
+      "name": "ustria"
+    }
+  ],
+  "failed_leagues_page": [],
+  "other_errors": []
+}
