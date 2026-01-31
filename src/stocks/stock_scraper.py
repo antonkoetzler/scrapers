@@ -322,14 +322,22 @@ class StockScraper:
         stock_config = get_stock_by_symbol(symbol)
         if not stock_config:
             TUI.warning(f"Unknown stock symbol: {symbol}")
+            # Still try yfinance for unknown symbols
+            if use_fallback and YFINANCE_AVAILABLE:
+                TUI.info(f"Trying yfinance for unknown symbol {symbol}")
+                result = self.fetch_via_yfinance(symbol)
+                return result
             return None
         
-        # Try Alpha Vantage API first
+        api_success = False
+        
+        # Try Alpha Vantage API first (only if we have API key and within rate limits)
         if self.api_key and self.rate_limiter.can_call():
             TUI.info(f"Fetching {symbol} from Alpha Vantage API")
             data = self.fetch_price_history_api(symbol)
             
             if data:
+                api_success = True
                 # Try to get company overview (optional)
                 overview = None
                 if self.rate_limiter.can_call():
@@ -341,10 +349,14 @@ class StockScraper:
                 result["metadata"]["industry"] = stock_config.get("industry", result["metadata"]["industry"])
                 result["metadata"]["exchange"] = stock_config.get("exchange", result["metadata"]["exchange"])
                 return result
+            else:
+                TUI.warning(f"Alpha Vantage failed for {symbol}, will try fallback")
+        elif self.api_key and not self.rate_limiter.can_call():
+            TUI.warning(f"API rate limit reached, using fallback for {symbol}")
         
-        # Fallback to yfinance
+        # Fallback to yfinance (always try if API failed or unavailable)
         if use_fallback and YFINANCE_AVAILABLE:
-            TUI.info(f"Using yfinance fallback for {symbol}")
+            TUI.info(f"Using yfinance for {symbol}")
             result = self.fetch_via_yfinance(stock_config.get("yfinance", symbol))
             if result:
                 # Add config metadata
@@ -352,6 +364,8 @@ class StockScraper:
                 result["metadata"]["industry"] = stock_config.get("industry", result["metadata"]["industry"])
                 result["metadata"]["exchange"] = stock_config.get("exchange", result["metadata"]["exchange"])
             return result
+        elif use_fallback and not YFINANCE_AVAILABLE:
+            TUI.error(f"yfinance not available for fallback on {symbol}")
         
         return None
     
